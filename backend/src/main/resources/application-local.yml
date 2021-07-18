@@ -1,0 +1,25 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: false
+        web-allow-others: false
+      path: '/h2'
+  jpa:
+    show-sql: true
+    properties:
+      format_sql: true
+      hibernate:
+        ddl-auto: none
+        dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:dblocal
+  flyway:
+    locations: classpath:db
+    enabled: true
+    placeholders:
+      id_type: integer auto_increment
+  sql:
+    init:
+      mode: embedded

@@ -1,0 +1,23 @@
+schema:
+  name: DBO
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: false
+        web-allow-others: false
+      path: '/h2'
+  jpa:
+    properties:
+      hibernate:
+        default_schema: ${schema.name}
+        ddl-auto: none
+        generate-ddl: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db
+    schemas: ${schema.name}
+    placeholders:
+      id_type: identity

@@ -10,12 +10,11 @@ node {
     version.set("14.15.3")
     yarnVersion.set("1.22.10")
     download.set(true)
-    npmInstallCommand.set(if (System.getenv("CI") != null)  "ci" else "install")
 }
 
 tasks.register<YarnTask>("bundle") {
     args.set(listOf("build"))
-    dependsOn(tasks.npmInstall)
+    dependsOn(tasks.yarn)
 }
 
 tasks.register<Jar>("webjar"){
