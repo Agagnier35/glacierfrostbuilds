@@ -14,12 +14,8 @@ node {
 }
 
 tasks.register<YarnTask>("bundle") {
-    args.set(listOf("run", "build"))
+    args.set(listOf("build"))
     dependsOn(tasks.npmInstall)
-}
-
-tasks.register<YarnTask>("run") {
-    args.set(listOf("start"))
 }
 
 tasks.register<Jar>("webjar"){
