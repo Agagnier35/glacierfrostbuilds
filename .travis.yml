@@ -3,7 +3,7 @@ language: java
 jdk:
   - oraclejdk11
 
-script: ./gradlew check --info --stacktrace --build-cache
+script: ./gradlew check --info --stacktrace --build-cache --max-workers=1 --no-daemon
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
