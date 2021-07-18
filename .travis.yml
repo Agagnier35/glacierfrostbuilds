@@ -1,0 +1,15 @@
+language: java
+
+jdk:
+  - oraclejdk11
+
+script: ./gradlew check --info --stacktrace --build-cache
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
