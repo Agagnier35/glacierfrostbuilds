@@ -9,7 +9,8 @@ plugins {
 node {
     version.set("14.15.3")
     yarnVersion.set("1.22.10")
-    download.set(false)
+    download.set(true)
+    npmInstallCommand.set(if (System.getenv("CI") != null)  "ci" else "install")
 }
 
 tasks.register<YarnTask>("bundle") {
