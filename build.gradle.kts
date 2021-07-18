@@ -6,6 +6,10 @@ plugins {
     id("com.github.node-gradle.node") version "3.1.0" apply false
 }
 
-repositories{
+repositories {
     mavenCentral()
+}
+
+subprojects {
+    apply(from = file("${rootProject.projectDir}/gradle/heroku/stage.gradle"))
 }
