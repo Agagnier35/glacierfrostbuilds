@@ -2,7 +2,7 @@ import com.github.gradle.node.yarn.task.YarnTask
 import org.gradle.jvm.tasks.Jar
 
 plugins {
-    id("java-library")
+    java
     id("com.github.node-gradle.node")
 }
 
@@ -12,21 +12,21 @@ node {
     download.set(true)
 }
 
+tasks.named("check") {
+    dependsOn("test")
+}
+
 tasks.register<YarnTask>("bundle") {
     args.set(listOf("build"))
     dependsOn(tasks.yarn)
 }
 
-tasks.register<Jar>("webjar"){
-    from(fileTree("build"))
-    into("/META-INF/resources/")
-}
-
-tasks.named("check") {
-    dependsOn("test")
-}
-
 tasks.named("jar") {
     dependsOn("bundle")
     finalizedBy("webjar")
+}
+
+tasks.register<Jar>("webjar"){
+    from(fileTree("build"))
+    into("/META-INF/resources/")
 }

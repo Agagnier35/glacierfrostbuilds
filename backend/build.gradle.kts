@@ -51,3 +51,12 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+// Not really necessary, just for Gradle to STFU
+tasks.named("bootJarMainClassName"){
+    dependsOn(":frontend:webjar")
+}
+
+tasks.named("compileTestKotlin"){
+    dependsOn(":frontend:webjar")
+}

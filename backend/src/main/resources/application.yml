@@ -20,4 +20,4 @@ spring:
     locations: classpath:db
     schemas: ${schema.name}
     placeholders:
-      id_type: identity
+      id_type: serial

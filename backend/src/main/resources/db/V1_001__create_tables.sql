@@ -25,9 +25,9 @@ CREATE TABLE Build (
     PRIMARY KEY (BuildId)
 );
 
-CREATE TABLE BuildSkills (
-    BuildId        INTEGER            NOT NULL,
-    TalentId       INTEGER            NOT NULL,
+CREATE TABLE BuildTalents (
+    BuildId        INTEGER         NOT NULL,
+    TalentId       INTEGER         NOT NULL,
     Points         INTEGER         NOT NULL,
     Comments       VARCHAR(1024),
     PRIMARY KEY (BuildId, TalentId)
