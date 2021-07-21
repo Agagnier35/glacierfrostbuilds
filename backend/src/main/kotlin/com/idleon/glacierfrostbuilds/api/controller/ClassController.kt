@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 class ClassController @Autowired constructor(val repo: PlayerClassRepository, val classMapper: PlayerClassMapper) {
 
     @GetMapping()
-    fun getPlayerClasses(): ResponseEntity<List<PlayerClassDto>> {
-        return ResponseEntity.ok(classMapper.toDto(repo.findAll()));
+    fun getPlayerClasses(): ResponseEntity<List<String>> {
+        return ResponseEntity.ok(repo.getAllClassNames())
     }
 
     @GetMapping("/{className}")

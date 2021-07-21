@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import PlayerClassRepository from '../../api/repository/playerClassRepository';
 
 const Home = () => {
-    return <div>Home page</div>;
+    const [classes, setClasses] = useState<string[]>([]);
+
+    useEffect(() => {
+        PlayerClassRepository.getPlayerClassNames().then(setClasses);
+    }, []);
+
+    return (
+        <>
+            <div>
+                Home page
+                <br />
+            </div>
+            <div>
+                {classes.map((s) => (
+                    <div key={s}>{s}</div>
+                ))}
+            </div>
+        </>
+    );
 };
 
 export default Home;

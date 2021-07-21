@@ -60,6 +60,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.named("compileKotlin"){
-    dependsOn(":frontend:webjar")
+tasks.matching { it.name !== "clean" }.all {
+    mustRunAfter(":frontend:webjar")
 }
+

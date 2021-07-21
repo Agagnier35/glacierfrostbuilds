@@ -13,7 +13,7 @@ class PlayerClass(
     @JoinColumn(name = "Parent_Class", referencedColumnName = "Class_Name")
     var parentClass: PlayerClass? = null,
 
-    @OneToMany(mappedBy = "className")
+    @OneToMany(mappedBy = "className", fetch = FetchType.LAZY)
     var talents: List<Talents> = arrayListOf()
 ) : Serializable {
     fun getAllTalentsForClass(): List<Talents> {
