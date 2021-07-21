@@ -25,7 +25,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core:7.11.2")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("org.postgresql:postgresql:42.1.4")
+    runtimeOnly("org.postgresql:postgresql:42.2.23")
 
     // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -52,11 +52,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-// Not really necessary, just for Gradle to STFU
-tasks.named("bootJarMainClassName"){
-    dependsOn(":frontend:webjar")
-}
-
-tasks.named("compileTestKotlin"){
+tasks.named("compileKotlin"){
     dependsOn(":frontend:webjar")
 }

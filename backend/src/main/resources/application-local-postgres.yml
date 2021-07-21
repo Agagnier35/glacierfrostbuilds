@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  sql:
+    init:
+      mode: embedded

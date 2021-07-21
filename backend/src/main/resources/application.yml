@@ -1,13 +1,8 @@
 schema:
   name: DBO
+server:
+  port: ${PORT:8080}
 spring:
-  h2:
-    console:
-      enabled: true
-      settings:
-        trace: false
-        web-allow-others: false
-      path: '/h2'
   jpa:
     properties:
       hibernate:
