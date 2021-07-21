@@ -5,6 +5,8 @@ plugins {
     id("io.spring.dependency-management")
     kotlin("jvm")
     kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+    kotlin("kapt")
 }
 
 group = "com.idleon"
@@ -23,13 +25,19 @@ dependencies {
 
     // JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.flywaydb:flyway-core:7.11.2")
+    implementation("org.flywaydb:flyway-core")
     runtimeOnly("com.h2database:h2")
-    runtimeOnly("org.postgresql:postgresql:42.2.23")
+    runtimeOnly("org.postgresql:postgresql")
 
     // Web
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.webjars:webjars-locator:0.41")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // MapStruct
+    api("org.mapstruct:mapstruct:1.4.2.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
 
     // kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -38,7 +46,7 @@ dependencies {
 
     //Tests
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
+    //testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {

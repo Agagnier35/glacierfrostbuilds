@@ -1,34 +1,34 @@
 CREATE TABLE Talents
 (
-    TalentId       ${id_type}      NOT NULL,
-    TalentName     VARCHAR(255)    NOT NULL,
-    ClassName      VARCHAR(50)     NOT NULL,
-    DisplayTab     SMALLINT        NOT NULL,
+    Talent_Id      ${id_type}      NOT NULL,
+    Talent_Name    VARCHAR(255)    NOT NULL,
+    Class_Name     VARCHAR(50)     NOT NULL,
+    Display_Tab    SMALLINT        NOT NULL,
     Description    VARCHAR(255)    NOT NULL,
-    PRIMARY KEY (TalentId)
+    PRIMARY KEY (Talent_Id)
 );
 
-CREATE TABLE Class
+CREATE TABLE Player_Class
 (
-    ClassName      VARCHAR(50)     NOT NULL,
-    ParentClass    VARCHAR(50),
-    PRIMARY KEY (ClassName)
+    Class_Name      VARCHAR(50)     NOT NULL,
+    Parent_Class    VARCHAR(50),
+    PRIMARY KEY (Class_Name)
 );
 
 CREATE TABLE Build (
-    BuildId        ${id_type}      NOT NULL,
-    BuildName      VARCHAR(255)    NOT NULL,
+    Build_Id       ${id_type}      NOT NULL,
+    Build_Name     VARCHAR(255)    NOT NULL,
     Description    VARCHAR(1024)   NOT NULL,
     Author         VARCHAR(255)    NOT NULL,
     Upvotes        INTEGER         NOT NULL,
-    Version        VARCHAR(50)     NOT NULL,
-    PRIMARY KEY (BuildId)
+    Game_Version   VARCHAR(50)     NOT NULL,
+    PRIMARY KEY (Build_Id)
 );
 
-CREATE TABLE BuildTalents (
-    BuildId        INTEGER         NOT NULL,
-    TalentId       INTEGER         NOT NULL,
+CREATE TABLE Build_Talents (
+    Build_Id       INTEGER         NOT NULL,
+    Talent_Id      INTEGER         NOT NULL,
     Points         INTEGER         NOT NULL,
     Comments       VARCHAR(1024),
-    PRIMARY KEY (BuildId, TalentId)
+    PRIMARY KEY (Build_Id, Talent_Id)
 );
