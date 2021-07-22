@@ -12,7 +12,7 @@ const TalentBuilder = ({ selectedClass }: TalentBuilderProps) => {
     const { build, editBuild } = useContext(BuildContext);
 
     const { playerClass } = build;
-
+/* eslint-disable */
     useEffect(() => {
         if (playerClass?.className) {
             PlayerClassRepository.getClassWithName(playerClass.className).then((pc) =>
@@ -20,6 +20,7 @@ const TalentBuilder = ({ selectedClass }: TalentBuilderProps) => {
             );
         }
     }, [playerClass?.className, editBuild]);
+/* eslint-enable */
 
     if (playerClass) {
         const numberOfTabs = Math.max(...playerClass.talents.map((t) => t.displayTab));
