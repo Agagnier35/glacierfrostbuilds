@@ -2,7 +2,7 @@ INSERT INTO Player_Class VALUES ('Beginner', null);
 
 INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Health Booster', 'Beginner', 0, 'Increases Max HP by {x}');
 INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Mana Booster', 'Beginner', 0, 'Increases Max MP by {x}');
-INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Star Player', 'Beginner', 0, 'Gives {x} Special Talent Points. Special Talents (Talent_Name, Class_Name, Display_Tab, Description) are found throughout the game!');
+INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Star Player', 'Beginner', 0, 'Gives {x} Special Talent Points. Special Talents are found throughout the game!');
 INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Bucklered Up', 'Beginner', 0, 'Increases Total Defense by +{x}%');
 INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Sharpened Axe', 'Beginner', 0, 'Increases Base Weapon Power by {x}. This contributes to your total damage.');
 INSERT INTO Talents (Talent_Name, Class_Name, Display_Tab, Description) VALUES ('Fist Of Rage', 'Beginner', 0, 'Increases your Base STR by {x} (STR boosts Max HP and Crit Damage)');

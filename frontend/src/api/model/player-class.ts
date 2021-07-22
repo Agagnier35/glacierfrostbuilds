@@ -1,6 +1,6 @@
 import Talents from './talents';
 
 export default interface PlayerClass {
-    className: String;
+    className: string;
     talents: Talents[];
 }

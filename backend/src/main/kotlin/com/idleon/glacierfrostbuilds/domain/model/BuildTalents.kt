@@ -22,7 +22,7 @@ class BuildTalents(
 ) : Serializable
 
 
-class BuildTalentsId(
+data class BuildTalentsId(
     val buildId: Int,
     val talentId: Int
 ) : Serializable

@@ -12,15 +12,15 @@ INSERT INTO Tags (Tag_Name, Category) VALUES ('EXP', 'Focus');
 INSERT INTO Tags (Tag_Name, Category) VALUES ('Efficiency', 'Focus');
 
 INSERT INTO Tags (Tag_Name, Category) VALUES ('AFK', 'Fighting');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('Active', 'Skill');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('Active', 'Fighting');
 
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W1');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W2');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W3');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W4');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W5');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W6');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W7');
-INSERT INTO Tags (Tag_Name, Category) VALUES ('World', 'W8');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W1', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W2', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W3', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W4', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W5', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W6', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W7', 'World');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('W8', 'World');
 
 INSERT INTO Tags (Tag_Name, Category) VALUES ('Other', 'Other');
