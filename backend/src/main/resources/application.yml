@@ -3,6 +3,12 @@ schema:
 server:
   port: ${PORT:8080}
 spring:
+  messages:
+    basename: bundles/messages
+    encoding: UTF-8
+    cache-duration: -1
+    fallback-to-system-local: false
+    use-code-as-default-message: true
   jpa:
     properties:
       hibernate:

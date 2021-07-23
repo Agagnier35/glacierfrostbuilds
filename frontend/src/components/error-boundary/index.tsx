@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import { ErrorBoundary as ErrorBoundaryLib } from 'react-error-boundary';
-import { toast } from 'react-toastify';
 import { RestError } from '../../api/model/rest-error';
 
 const ErrorFallback = ({ error }: any) => (
@@ -12,26 +11,25 @@ const ErrorFallback = ({ error }: any) => (
     </div>
 );
 
-const ErrorBoundary = ({ children }: { children: ReactNode }) => {
-    const myErrorHandler = (error: any) => {
-        if (error.response.data) {
-            const restError = error.response.data as RestError;
-            toast.error(
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div>Error {restError.code}</div>
-                    {restError.errors.map((e) => (
-                        <div key={e.code}>{e.details}</div>
-                    ))}
-                </div>,
-            );
-        }
-    };
+export const RestErrorToast = ({ restError }: { restError: RestError }) => (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>Error {restError.code}</div>
+        {restError.issues.map((e) => (
+            <div key={e.code}>
+                {e.field ? `${e.field}: ` : ''} {e.details}
+                {Object.entries(e.meta).map(([metaName, metaValue]) => (
+                    <div key={metaName}>
+                        {' '}
+                        =&gt; {metaName}: {Array.isArray(metaValue) ? metaValue.join(', ') : metaValue}
+                    </div>
+                ))}
+            </div>
+        ))}
+    </div>
+);
 
-    return (
-        <ErrorBoundaryLib FallbackComponent={ErrorFallback} onError={myErrorHandler}>
-            {children}
-        </ErrorBoundaryLib>
-    );
-};
+const ErrorBoundary = ({ children }: { children: ReactNode }) => (
+    <ErrorBoundaryLib FallbackComponent={ErrorFallback}>{children}</ErrorBoundaryLib>
+);
 
 export default ErrorBoundary;

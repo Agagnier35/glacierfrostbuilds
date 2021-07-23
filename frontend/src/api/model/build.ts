@@ -24,7 +24,7 @@ export const buildDefaultBuild = (): Build => ({
     gameVersion: '',
     talents: [],
     playerClass: {
-        className: 'Beginner',
+        className: '',
         talents: [],
     },
     tags: [],

@@ -34,7 +34,7 @@ const CreateBuild = () => {
     /* eslint-enable */
 
     const createBuild = () => {
-        BuildRepository.postBuild(build).then((b) => toast.success(`Build Created, ${b.buildId}`));
+        BuildRepository.postBuild(build).then((b) => toast.success(`Build Created, ${b?.buildId}`));
     };
 
     return (
