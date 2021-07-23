@@ -4,14 +4,28 @@ import Tags from './tags';
 
 export default interface Build {
     buildId?: number;
-    buildName?: string;
-    description?: string;
-    author?: string;
-    upvotes?: number;
-    gameVersion?: string;
-    minLevel?: string;
-    maxLevel?: string;
-    talents?: BuildTalents[];
-    playerClass?: PlayerClass;
-    tags?: Tags[];
+    buildName: string;
+    description: string;
+    author: string;
+    upvotes: number;
+    gameVersion: string;
+    minLevel?: number;
+    maxLevel?: number;
+    talents: BuildTalents[];
+    playerClass: PlayerClass;
+    tags: Tags[];
 }
+
+export const buildDefaultBuild = (): Build => ({
+    buildName: '',
+    description: '',
+    author: 'TODO',
+    upvotes: 0,
+    gameVersion: '',
+    talents: [],
+    playerClass: {
+        className: 'Beginner',
+        talents: [],
+    },
+    tags: [],
+});

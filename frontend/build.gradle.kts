@@ -27,6 +27,6 @@ tasks.named("jar") {
 }
 
 tasks.register<Jar>("webjar"){
-    from(fileTree("build"))
+    from(fileTree("dist"))
     into("/META-INF/resources/")
 }

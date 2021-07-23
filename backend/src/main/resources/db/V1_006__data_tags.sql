@@ -13,6 +13,7 @@ INSERT INTO Tags (Tag_Name, Category) VALUES ('Efficiency', 'Focus');
 
 INSERT INTO Tags (Tag_Name, Category) VALUES ('AFK', 'Fighting');
 INSERT INTO Tags (Tag_Name, Category) VALUES ('Active', 'Fighting');
+INSERT INTO Tags (Tag_Name, Category) VALUES ('Bossing', 'Fighting');
 
 INSERT INTO Tags (Tag_Name, Category) VALUES ('W1', 'World');
 INSERT INTO Tags (Tag_Name, Category) VALUES ('W2', 'World');

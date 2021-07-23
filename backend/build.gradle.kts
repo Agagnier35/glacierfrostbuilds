@@ -4,9 +4,10 @@ plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
     kotlin("jvm")
+    kotlin("kapt")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
-    kotlin("kapt")
+
 }
 
 group = "com.idleon"
@@ -34,10 +35,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.webjars:webjars-locator:0.41")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
 
     // MapStruct
-    api("org.mapstruct:mapstruct:1.4.2.Final")
-    kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
+    api("org.mapstruct:mapstruct:1.5.0.Beta1")
+    kapt("org.mapstruct:mapstruct-processor:1.5.0.Beta1")
 
     // kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -63,4 +65,3 @@ tasks.withType<Test> {
 tasks.matching { it.name !== "clean" }.all {
     mustRunAfter(":frontend:webjar")
 }
-

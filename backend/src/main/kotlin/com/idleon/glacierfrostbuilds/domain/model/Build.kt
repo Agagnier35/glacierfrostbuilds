@@ -1,50 +1,48 @@
 package com.idleon.glacierfrostbuilds.domain.model
 
 import java.io.Serializable
-import java.util.Collections.emptyList
 import javax.persistence.*
 
 @Entity
-class Build(
+data class Build(
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Build_Id")
     var buildId: Int? = null,
 
     @Column(name = "Build_Name")
-    var buildName: String,
+    var buildName: String = "",
 
     @Column(name = "Description")
-    var description: String,
+    var description: String = "",
 
     @Column(name = "Author")
-    var author: String,
+    var author: String = "",
 
     @Column(name = "Upvotes")
     var upvotes: Int = 0,
 
     @Column(name = "Game_Version")
-    var gameVersion: String,
+    var gameVersion: String = "",
 
     @Column(name = "Min_Level")
-    var minLevel: String,
+    var minLevel: Int = 0,
 
     @Column(name = "Max_Level")
-    var maxLevel: String,
+    var maxLevel: Int = 0,
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Build_Id")
-    var talents: List<BuildTalents> = emptyList(),
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
+    var talents: List<BuildTalents> = arrayListOf(),
 
     @ManyToOne
     @JoinColumn(name = "Class_Name")
-    var playerClass: PlayerClass,
+    var playerClass: PlayerClass = PlayerClass(),
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "Build_Tags",
         joinColumns = [JoinColumn(name = "Build_Id")],
-        inverseJoinColumns = [JoinColumn(name = "Tag_Id")]
+        inverseJoinColumns = [JoinColumn(name = "Tag_Id")],
     )
-    var tags: List<Tags> = emptyList()
+    var tags: List<Tags> = arrayListOf()
 ) : Serializable

@@ -12,11 +12,15 @@ interface TalentSelectorProps {
 const TalentSelector = ({ talent, setActiveTalent }: TalentSelectorProps) => {
     const { build } = useContext(BuildContext);
 
+    const buildTalent = build.talents?.find((t) => t.talentId === talent.talentId);
     return (
-        <Col onClick={() => setActiveTalent(talent)}>
-            <Image src="assets/unknown.png" fluid />
-            <TalentPointCounter className="text-info">
-                {build.talents?.find((t) => t.talentId === talent.talentId)?.points ?? 0}
+        <Col onClick={() => setActiveTalent(talent)} style={{ padding: 0 }}>
+            <Image
+                src={`assets/talents/${talent.className}/${talent.displayTab}-${talent.displayOrder + 1}.png`}
+                fluid
+            />
+            <TalentPointCounter className={buildTalent?.comments ? 'text-danger' : 'text-info'}>
+                {buildTalent?.points ?? 0}
             </TalentPointCounter>
         </Col>
     );

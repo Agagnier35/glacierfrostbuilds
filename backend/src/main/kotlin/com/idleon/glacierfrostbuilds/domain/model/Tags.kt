@@ -6,14 +6,14 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-class Tags(
+data class Tags(
     @Id
     @Column(name = "Tag_Id")
-    var tag_Id: String,
+    var tagId: Int = 0,
 
     @Column(name = "Tag_Name")
-    var tag_Name: String,
+    var tagName: String = "",
 
     @Column(name = "Category")
-    var category: String
+    var category: String = ""
 ) : Serializable

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
 @Configuration
-@Profile("local")
+@Profile("local", "local-postgres")
 class LocalCorsConfig {
     @Bean
     fun corsConfigurer(): WebMvcConfigurer {

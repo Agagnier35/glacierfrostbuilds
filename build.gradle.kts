@@ -4,9 +4,8 @@ plugins {
     kotlin("jvm") version "1.5.20" apply false
     kotlin("plugin.spring") version "1.5.20" apply false
     kotlin("plugin.jpa") version "1.5.20" apply false
-    kotlin("kapt") version "1.5.21" apply false
+    kotlin("kapt") version "1.5.20" apply false
     id("com.github.node-gradle.node") version "3.1.0" apply false
-
 }
 
 repositories {

@@ -27,7 +27,7 @@ const ActiveTalentEditor = ({ activeTalent }: ActiveTalentProps) => {
                     draft.talents = [];
                 }
 
-                if (newPoints <= 0) {
+                if (newPoints <= 0 && !newComment) {
                     draft.talents = draft.talents.filter((t) => t.talentId !== activeTalent.talentId);
                 } else {
                     const index = draft.talents.findIndex((t) => t.talentId === activeTalent.talentId);
@@ -49,7 +49,12 @@ const ActiveTalentEditor = ({ activeTalent }: ActiveTalentProps) => {
         <TalentContainer fluid>
             <Row style={{ alignItems: 'center' }}>
                 <Col>
-                    <Image src="assets/unknown.png" fluid />
+                    <Image
+                        src={`assets/talents/${activeTalent.className}/${activeTalent.displayTab}-${
+                            activeTalent.displayOrder + 1
+                        }.png`}
+                        fluid
+                    />
                 </Col>
                 <Col xs={8}>
                     <Container>

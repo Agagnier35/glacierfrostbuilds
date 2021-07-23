@@ -4,20 +4,20 @@ import java.io.Serializable
 import javax.persistence.*
 
 @Entity
-class PlayerClass(
+data class PlayerClass(
     @Id
     @Column(name = "Class_Name")
-    var className: String,
+    var className: String = "",
 
     @ManyToOne
     @JoinColumn(name = "Parent_Class", referencedColumnName = "Class_Name")
     var parentClass: PlayerClass? = null,
 
-    @OneToMany(mappedBy = "className", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "playerClass", fetch = FetchType.LAZY)
     var talents: List<Talents> = arrayListOf()
 ) : Serializable {
-    fun getAllTalentsForClass(): List<Talents> {
-        val parentTalents = parentClass?.getAllTalentsForClass()?.toMutableList() ?: arrayListOf();
+    fun obtainAllTalentsForClass(): List<Talents> {
+        val parentTalents = parentClass?.obtainAllTalentsForClass()?.toMutableList() ?: arrayListOf();
         parentTalents.addAll(talents)
         return parentTalents;
     }

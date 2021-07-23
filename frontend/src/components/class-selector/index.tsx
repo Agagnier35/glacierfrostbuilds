@@ -33,7 +33,7 @@ const ClassSelector = () => {
                             )
                         }
                     >
-                        <Image src={`assets/${c}.png`} fluid />
+                        <Image src={`assets/classes/${c}.png`} fluid />
                     </Col>
                 ))}
             </Row>

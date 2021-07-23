@@ -4,6 +4,7 @@ CREATE TABLE Talents
     Talent_Name    VARCHAR(255)    NOT NULL,
     Class_Name     VARCHAR(50)     NOT NULL,
     Display_Tab    SMALLINT        NOT NULL,
+    Display_Order  SMALLINT        NOT NULL,
     Description    VARCHAR(255)    NOT NULL,
     PRIMARY KEY (Talent_Id)
 );

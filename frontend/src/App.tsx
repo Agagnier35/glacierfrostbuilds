@@ -3,8 +3,11 @@ import 'bootswatch/dist/slate/bootstrap.min.css';
 import React from 'react';
 import { Container, Image, Nav, Navbar } from 'react-bootstrap';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import './bootswatchOverrides.css'; //must be after!
+import ErrorBoundary from './components/error-boundary';
 import CreateBuild from './pages/create-build';
 import Home from './pages/home';
 
@@ -20,6 +23,7 @@ const Mascot = styled(Image)`
 const App = () => {
     return (
         <Router>
+            <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
             <Navbar bg="primary" variant="dark" className="mb-3">
                 <Container fluid>
                     <Navbar.Brand>
@@ -41,10 +45,14 @@ const App = () => {
 
             <Switch>
                 <Route path="/" exact>
-                    <Home />
+                    <ErrorBoundary>
+                        <Home />
+                    </ErrorBoundary>
                 </Route>
                 <Route path="/create">
-                    <CreateBuild />
+                    <ErrorBoundary>
+                        <CreateBuild />
+                    </ErrorBoundary>
                 </Route>
             </Switch>
         </Router>

@@ -22,6 +22,7 @@ const TalentCard = ({ talents }: TalentCardProps) => {
         <TalentSelector key={t.talentId} talent={t} setActiveTalent={setActiveTalent} />
     );
 
+    talents.sort((a, b) => a.displayOrder - b.displayOrder);
     return (
         <Card key={talents[0].displayTab}>
             <Card.Body>

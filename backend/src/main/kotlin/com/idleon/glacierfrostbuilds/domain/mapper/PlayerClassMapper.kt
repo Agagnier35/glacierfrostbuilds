@@ -2,21 +2,22 @@ package com.idleon.glacierfrostbuilds.domain.mapper
 
 import com.idleon.glacierfrostbuilds.api.dto.PlayerClassDto
 import com.idleon.glacierfrostbuilds.domain.model.PlayerClass
-import org.mapstruct.*
+import org.mapstruct.Mapper
+import org.mapstruct.Mapping
+import org.mapstruct.NullValueMappingStrategy
 import org.springframework.beans.factory.annotation.Autowired
 
-@Mapper(componentModel = "spring", uses = [TalentsMapper::class])
-abstract class PlayerClassMapper  {
+@Mapper(
+    componentModel = "spring", uses = [TalentsMapper::class],
+    nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT,
+)
+abstract class PlayerClassMapper {
     @Autowired
-    private lateinit var talentsMapper: TalentsMapper
+    protected lateinit var talentsMapper: TalentsMapper
 
-    @Mapping(target = "className", source = "className")
+    @Mapping(target = "talents", expression = "java(talentsMapper.toDto(source.obtainAllTalentsForClass()))")
     abstract fun toDto(source: PlayerClass): PlayerClassDto
 
-    @AfterMapping
-    fun afterToDto(@MappingTarget target: PlayerClassDto, source: PlayerClass) {
-        target.talents = talentsMapper.toDto(source.getAllTalentsForClass());
-    }
-
-    abstract fun toDto(source: List<PlayerClass>): List<PlayerClassDto>
+    @Mapping(target = "talents", ignore = true)
+    abstract fun fromDto(source: PlayerClassDto): PlayerClass
 }

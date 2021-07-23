@@ -1,26 +1,28 @@
+import produce from 'immer';
 import React, { useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import PlayerClassRepository from '../../api/repository/playerClassRepository';
 import { BuildContext } from '../../pages/create-build';
 import TalentCard from '../talent-card';
 
-interface TalentBuilderProps {
-    selectedClass?: string;
-}
-
-const TalentBuilder = ({ selectedClass }: TalentBuilderProps) => {
+const TalentBuilder = () => {
     const { build, editBuild } = useContext(BuildContext);
 
     const { playerClass } = build;
-/* eslint-disable */
+
     useEffect(() => {
         if (playerClass?.className) {
             PlayerClassRepository.getClassWithName(playerClass.className).then((pc) =>
-                editBuild({ ...build, playerClass: pc }),
+                editBuild(
+                    produce(build, (draft) => {
+                        draft.playerClass = pc;
+                    }),
+                ),
             );
         }
+        /* eslint-disable */
     }, [playerClass?.className, editBuild]);
-/* eslint-enable */
+    /* eslint-enable */
 
     if (playerClass) {
         const numberOfTabs = Math.max(...playerClass.talents.map((t) => t.displayTab));
