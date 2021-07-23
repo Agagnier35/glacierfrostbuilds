@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { Col, Image } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import Talents from '../../api/model/talents';
 import { BuildContext } from '../../pages/create-build';
-import { TalentPointCounter } from './style';
+import { OneTalentContainer, TalentPointCounter } from './style';
 
 interface TalentSelectorProps {
     talent: Talents;
@@ -14,7 +14,7 @@ const TalentSelector = ({ talent, setActiveTalent }: TalentSelectorProps) => {
 
     const buildTalent = build.talents?.find((t) => t.talentId === talent.talentId);
     return (
-        <Col onClick={() => setActiveTalent(talent)} style={{ padding: 0 }}>
+        <OneTalentContainer onClick={() => setActiveTalent(talent)}>
             <Image
                 src={`assets/talents/${talent.className}/${talent.displayTab}-${talent.displayOrder + 1}.png`}
                 fluid
@@ -22,7 +22,7 @@ const TalentSelector = ({ talent, setActiveTalent }: TalentSelectorProps) => {
             <TalentPointCounter className={buildTalent?.comments ? 'text-danger' : 'text-info'}>
                 {buildTalent?.points ?? 0}
             </TalentPointCounter>
-        </Col>
+        </OneTalentContainer>
     );
 };
 

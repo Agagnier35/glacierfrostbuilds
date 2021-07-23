@@ -3,6 +3,7 @@ import React, { ChangeEvent, useContext } from 'react';
 import { Col, Container, Form, Image, Row } from 'react-bootstrap';
 import Talents from '../../api/model/talents';
 import { BuildContext } from '../../pages/create-build';
+import { OneTalentContainer } from '../talent-selector/style';
 import { TalentContainer } from './style';
 
 interface ActiveTalentProps {
@@ -48,14 +49,14 @@ const ActiveTalentEditor = ({ activeTalent }: ActiveTalentProps) => {
     return (
         <TalentContainer fluid>
             <Row style={{ alignItems: 'center' }}>
-                <Col>
+                <OneTalentContainer>
                     <Image
                         src={`assets/talents/${activeTalent.className}/${activeTalent.displayTab}-${
                             activeTalent.displayOrder + 1
                         }.png`}
                         fluid
                     />
-                </Col>
+                </OneTalentContainer>
                 <Col xs={8}>
                     <Container>
                         <Row>
@@ -68,8 +69,10 @@ const ActiveTalentEditor = ({ activeTalent }: ActiveTalentProps) => {
                         </Row>
                         <Row>
                             <Form.Control
+                                style={{ resize: 'none' }}
+                                as="textarea"
+                                rows={2}
                                 size="sm"
-                                type="text"
                                 placeholder="Comments ..."
                                 value={talentComments}
                                 onChange={(e) => changeBuildTalent('comment', e)}

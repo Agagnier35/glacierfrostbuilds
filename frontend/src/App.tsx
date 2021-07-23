@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import './bootswatchOverrides.css'; //must be after!
 import ErrorBoundary from './components/error-boundary';
+import About from './pages/about';
 import CreateBuild from './pages/create-build';
 import Home from './pages/home';
 
@@ -29,14 +30,18 @@ const App = () => {
                     <Navbar.Brand>
                         <Mascot src="assets/GlacierFrostMascot.png" />
                         <Link to="/" className="home-link">
-                            GlacierFrostBuilds
+                            GlacierFrost2Builds
                         </Link>
                     </Navbar.Brand>
                     <Nav className="me-auto">
-                        <Nav.Item></Nav.Item>
                         <Nav.Item>
                             <Link to="/create" className="nav-link">
                                 Create
+                            </Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Link to="/about" className="nav-link">
+                                About
                             </Link>
                         </Nav.Item>
                     </Nav>
@@ -52,6 +57,11 @@ const App = () => {
                 <Route path="/create">
                     <ErrorBoundary>
                         <CreateBuild />
+                    </ErrorBoundary>
+                </Route>
+                <Route path="/about">
+                    <ErrorBoundary>
+                        <About />
                     </ErrorBoundary>
                 </Route>
             </Switch>
