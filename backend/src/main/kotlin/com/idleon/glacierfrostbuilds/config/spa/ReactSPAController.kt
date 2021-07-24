@@ -1,4 +1,4 @@
-package com.idleon.glacierfrostbuilds.spa
+package com.idleon.glacierfrostbuilds.config.spa
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping

@@ -22,3 +22,28 @@ spring:
     schemas: ${schema.name}
     placeholders:
       id_type: serial
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: github-client-id
+            client-secret: github-client-secret
+          google:
+            client-id: google-client-id
+            client-secret: google-client-secret
+          discord:
+            client-id: 867947871549403186
+            client-secret: k_xUVDPS8UkLIuEQpLMQJk6qhg0B_5mU
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            scope:
+              - identify
+            redirect-uri: "{baseUrl}/api/v1/login/oauth2/code/discord"
+            client-name: GlacierFrost2Builds
+        provider:
+          discord:
+            authorization-uri: https://discordapp.com/api/oauth2/authorize
+            token-uri: https://discordapp.com/api/oauth2/token
+            user-info-uri: https://discordapp.com/api/users/@me
+            username-attribute: username

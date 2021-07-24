@@ -9,8 +9,39 @@ const useHandleApiError = () => {
     const handleError = useErrorHandler();
     useEffect(() => {
         const interceptorId = apiGateway.interceptors.response.use(undefined, (error) => {
-            if (error?.response?.data) {
-                const restError = error.response.data as RestError;
+            if (error?.response) {
+                let restError: RestError | null = null;
+                if (error.response.data) {
+                    restError = error.response.data as RestError;
+                } else if (error.response.status === 401) {
+                    if ((error.request.responseURL as string).endsWith('/user')) {
+                        return Promise.reject();
+                    }
+                    restError = {
+                        status: 401,
+                        code: 'You must be logged in to do this',
+                        issues: [],
+                    };
+                } else if (error.response.status === 403) {
+                    restError = {
+                        status: 403,
+                        code: 'You are not authorized to do this',
+                        issues: [],
+                    };
+                } else {
+                    restError = {
+                        status: error.response.status,
+                        code: `The dev forgot to handle => ${error.response.status}`,
+                        issues: [
+                            {
+                                code: 'UnknownRESTError',
+                                details: 'AKA, you fucked up terribly',
+                                meta: {},
+                                timestamp: new Date(),
+                            },
+                        ],
+                    };
+                }
                 toast.error(<RestErrorToast restError={restError} />);
                 return Promise.reject();
             } else if (error.isAxiosError) {

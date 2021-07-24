@@ -1,52 +1,22 @@
 import 'bootswatch/dist/slate/bootstrap.min.css';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { Container, Image, Nav, Navbar } from 'react-bootstrap';
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import styled from 'styled-components';
 import './bootswatchOverrides.css'; //must be after!
-import ErrorBoundary from './components/error-boundary';
+import ErrorBoundary, { ErrorFallback } from './components/error-boundary';
+import Topbar from './components/topbar';
 import About from './pages/about';
 import CreateBuild from './pages/create-build';
 import Home from './pages/home';
+import AuthProvider from './utils/authProvider';
 
-const Mascot = styled(Image)`
-    height: 40px;
-    margin-right: 5px;
-
-    & + .home-link {
-        text-decoration: none;
-    }
-`;
-
-const App = () => {
-    return (
-        <Router>
-            <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
-            <Navbar bg="primary" variant="dark" className="mb-3">
-                <Container fluid>
-                    <Navbar.Brand>
-                        <Mascot src="assets/GlacierFrostMascot.png" />
-                        <Link to="/" className="home-link">
-                            GlacierFrost2Builds
-                        </Link>
-                    </Navbar.Brand>
-                    <Nav className="me-auto">
-                        <Nav.Item>
-                            <Link to="/create" className="nav-link">
-                                Create
-                            </Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Link to="/about" className="nav-link">
-                                About
-                            </Link>
-                        </Nav.Item>
-                    </Nav>
-                </Container>
-            </Navbar>
+const App = () => (
+    <Router>
+        <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
+        <AuthProvider>
+            <Topbar />
 
             <Switch>
                 <Route path="/" exact>
@@ -64,9 +34,12 @@ const App = () => {
                         <About />
                     </ErrorBoundary>
                 </Route>
+                <Route path="/error">
+                    <ErrorFallback error={{ stack: 'Backend Auth Failure' }} />
+                </Route>
             </Switch>
-        </Router>
-    );
-};
+        </AuthProvider>
+    </Router>
+);
 
 export default App;

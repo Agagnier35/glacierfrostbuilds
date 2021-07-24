@@ -44,7 +44,7 @@ const About = () => {
                     <Row>
                         <h5>Will Do:</h5>
                         <p style={{ textDecoration: 'line-through' }}>Create Builds</p>
-                        <p>Discord SSO login</p>
+                        <p style={{ textDecoration: 'line-through' }}>Discord SSO login</p>
                         <p>View 1 Build</p>
                         <p>View Builds using search function (class, tags, sort upvoted, new, etc...)</p>
                         <p>Upvotes/downvotes Builds</p>

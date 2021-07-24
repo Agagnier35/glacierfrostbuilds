@@ -10,3 +10,11 @@ spring:
   sql:
     init:
       mode: embedded
+
+logging:
+  level:
+    web: TRACE
+    org:
+      springframework:
+        web: TRACE
+        security: TRACE

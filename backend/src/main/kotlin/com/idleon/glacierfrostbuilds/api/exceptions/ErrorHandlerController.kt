@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,6 +22,18 @@ class ErrorHandlerController {
             RestError(HttpStatus.INTERNAL_SERVER_ERROR, listOf(RestIssue(ex.javaClass.name, ex.message ?: "")))
         }
         logger.error(ex) { "Exception" }
+
+        return ResponseEntity.status(error.status).body(error)
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthEx(ex: Exception, request: WebRequest): ResponseEntity<RestError> {
+        val error = RestError(
+            HttpStatus.UNAUTHORIZED,
+            listOf(RestIssue(AuthenticationException::class.simpleName!!, "Auth failure"))
+        )
+
+        logger.error(ex) { "Auth failure: " }
 
         return ResponseEntity.status(error.status).body(error)
     }
