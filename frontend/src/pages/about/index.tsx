@@ -73,7 +73,8 @@ const About = () => {
                 <Card.Body>
                     <Container fluid>
                         <Row>
-                            <h3>IDK WHAT THE FIRST VERSION WILL BE YET</h3>
+                            <h3>v0.1.0</h3>
+                            <p>Initial launch of the Tool</p>
                         </Row>
                     </Container>
                 </Card.Body>
