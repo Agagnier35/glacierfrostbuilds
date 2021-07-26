@@ -1,7 +1,7 @@
-import { Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import styled from 'styled-components';
 
-export const TagContainer = styled(Row)`
+export const TagContainer = styled(Container)`
     margin-bottom: 0;
     display: flex;
     align-items: center;

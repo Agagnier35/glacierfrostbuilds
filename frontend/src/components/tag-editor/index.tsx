@@ -47,11 +47,10 @@ const TagEditor = () => {
                 backgroundColor: color.alpha(0.7).css(),
             };
         },
-        multiValueLabel: (styles: any, { data }: any) => {
-            const color = chroma(getColorForTag(data).hex);
+        multiValueLabel: (styles: any, { data, isFocused }: any) => {
             return {
                 ...styles,
-                color: chroma.contrast(color, 'white') > 2 ? 'white' : 'black',
+                color: isFocused ? 'black' : 'white',
             };
         },
         multiValueRemove: (styles: any, { data }: any) => {

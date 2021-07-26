@@ -1,6 +1,7 @@
 package com.idleon.glacierfrostbuilds.domain.model
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -44,5 +45,8 @@ data class Build(
         joinColumns = [JoinColumn(name = "Build_Id")],
         inverseJoinColumns = [JoinColumn(name = "Tag_Id")],
     )
-    var tags: List<Tags> = arrayListOf()
+    var tags: List<Tags> = arrayListOf(),
+
+    @Column(name = "timestamp_creation")
+    var timestampCreation: LocalDateTime = LocalDateTime.now(),
 ) : Serializable

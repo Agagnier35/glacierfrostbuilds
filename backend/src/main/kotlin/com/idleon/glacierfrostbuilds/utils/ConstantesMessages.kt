@@ -7,4 +7,6 @@ object ConstantesMessages {
     const val MSG_NOT_EXIST = "msg.value.doesNotExist"
     const val MSG_NOT_LOGGED_IN = "msg.value.notLoggedIn"
     const val MSG_NOT_GREATER_THAN_0 = "msg.value.greaterThan0"
+    const val MSG_ALREADY_UPVOTED = "msg.vote.alreadyUpvote"
+    const val MSG_ALREADY_DOWNVOTED = "msg.vote.alreadyDownvote"
 }

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Button, ButtonGroup, Col, Figure, FloatingLabel, Form, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, ButtonToolbar, Col, Figure, FloatingLabel, Form, Row } from 'react-bootstrap';
 import Tags from '../../api/model/tags';
 import GameRepository from '../../api/repository/gameRepository';
 import PlayerClassRepository from '../../api/repository/playerClassRepository';
@@ -90,7 +90,7 @@ const SearchForm = ({ searchForm, setSearchForm, search }: SearchFormProps) => {
                     })}
                 </ButtonGroup>
             </Row>
-            <Row>
+            <Row className="mb-3">
                 <h5>Tags:</h5>
                 <ButtonGroup className="flex-wrap">
                     {tags.map((t) => {
@@ -114,6 +114,59 @@ const SearchForm = ({ searchForm, setSearchForm, search }: SearchFormProps) => {
                         );
                     })}
                 </ButtonGroup>
+            </Row>
+            <Row>
+                <h5>Sort:</h5>
+                <ButtonToolbar className="flex-wrap">
+                    <ButtonGroup className="me-2">
+                        <Button
+                            variant={`${searchForm.sortBy === 'upvotes' ? 'secondary' : 'outline-primary'}`}
+                            onClick={() =>
+                                setSearchForm({
+                                    ...searchForm,
+                                    sortBy: 'upvotes',
+                                })
+                            }
+                        >
+                            Upvotes
+                        </Button>
+                        <Button
+                            variant={`${searchForm.sortBy === 'timestampCreation' ? 'secondary' : 'outline-primary'}`}
+                            onClick={() =>
+                                setSearchForm({
+                                    ...searchForm,
+                                    sortBy: 'timestampCreation',
+                                })
+                            }
+                        >
+                            Creation Date
+                        </Button>
+                    </ButtonGroup>
+                    <ButtonGroup className="me-2">
+                        <Button
+                            variant={`${searchForm.sortDir === 'ASC' ? 'secondary' : 'outline-primary'}`}
+                            onClick={() =>
+                                setSearchForm({
+                                    ...searchForm,
+                                    sortDir: 'ASC',
+                                })
+                            }
+                        >
+                            Ascending
+                        </Button>
+                        <Button
+                            variant={`${searchForm.sortDir === 'DESC' ? 'secondary' : 'outline-primary'}`}
+                            onClick={() =>
+                                setSearchForm({
+                                    ...searchForm,
+                                    sortDir: 'DESC',
+                                })
+                            }
+                        >
+                            Descending
+                        </Button>
+                    </ButtonGroup>
+                </ButtonToolbar>
             </Row>
             <CenterDiv>
                 <Button

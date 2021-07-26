@@ -46,13 +46,10 @@ const About = () => {
                         <p style={{ textDecoration: 'line-through' }}>Create Builds</p>
                         <p style={{ textDecoration: 'line-through' }}>Discord SSO login</p>
                         <p style={{ textDecoration: 'line-through' }}>View 1 Build</p>
-                        <p>
-                            <pre style={{ textDecoration: 'line-through', display: 'inline' }}>
-                                View Builds using search function (class, tags,
-                            </pre>{' '}
-                            sort upvoted, new, etc...)
+                        <p style={{ textDecoration: 'line-through' }}>
+                            View Builds using search function (class, tags, sort upvoted, new, etc...)
                         </p>
-                        <p>Upvotes/downvotes Builds</p>
+                        <p style={{ textDecoration: 'line-through' }}>Upvotes/downvotes Builds</p>
                     </Row>
                     <Row>
                         <h5>Should Do Eventually: </h5>
@@ -72,6 +69,12 @@ const About = () => {
                 <Card.Header>Changelog</Card.Header>
                 <Card.Body>
                     <Container fluid>
+                        <Row>
+                            <h3>v0.1.1</h3>
+                            <p>Add Upvotes/downvote builds</p>
+                            <p>Add Created timestamp</p>
+                            <p>Add Sort functionality (upvote or timestamp)</p>
+                        </Row>
                         <Row>
                             <h3>v0.1.0</h3>
                             <p>Initial launch of the Tool</p>

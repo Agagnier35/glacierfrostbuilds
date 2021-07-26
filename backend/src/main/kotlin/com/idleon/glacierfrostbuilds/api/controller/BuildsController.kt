@@ -4,10 +4,9 @@ import com.idleon.glacierfrostbuilds.api.dto.BuildDto
 import com.idleon.glacierfrostbuilds.api.dto.BuildListDto
 import com.idleon.glacierfrostbuilds.api.validator.ValidatorFactory
 import com.idleon.glacierfrostbuilds.domain.mapper.BuildMapper
-import com.idleon.glacierfrostbuilds.domain.model.Build
-import com.idleon.glacierfrostbuilds.domain.model.PlayerClass
-import com.idleon.glacierfrostbuilds.domain.model.Tags
+import com.idleon.glacierfrostbuilds.domain.model.*
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
+import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
 import com.idleon.glacierfrostbuilds.utils.UnpagedSort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -23,6 +22,7 @@ import javax.persistence.criteria.Predicate
 @RequestMapping("/api/v1/builds")
 class BuildsController @Autowired constructor(
     val repo: BuildRepository,
+    val voteRepo: BuildVotesRepository,
     val mapper: BuildMapper,
     val validatorFactory: ValidatorFactory
 ) {
@@ -30,13 +30,16 @@ class BuildsController @Autowired constructor(
     fun getBuilds(
         @RequestParam pageNumber: Int?,
         @RequestParam pageSize: Int?,
+        @RequestParam sortBy: String?,
+        @RequestParam sortDirection: Sort.Direction?,
         @RequestParam buildName: String?,
         @RequestParam author: String?,
         @RequestParam className: String?,
         @RequestParam tags: String?,
-        @RequestParam gameVersion: String?
+        @RequestParam gameVersion: String?,
+        @AuthenticationPrincipal principal: OAuth2User?
     ): ResponseEntity<BuildListDto> {
-        val sort = Sort.by("buildId")
+        val sort = Sort.by(sortDirection ?: Sort.Direction.DESC, validateSort(sortBy))
         val page = if (pageNumber != null && pageSize != null)
             PageRequest.of(pageNumber, pageSize, sort)
         else
@@ -69,7 +72,7 @@ class BuildsController @Autowired constructor(
 
         return ResponseEntity.ok(
             BuildListDto(
-                mapper.toDto(buildResults.content),
+                mapper.toDto(buildResults.content, false, principal?.name),
                 buildResults.totalElements,
                 buildResults.totalPages
             )
@@ -83,19 +86,31 @@ class BuildsController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getBuildsWithId(@PathVariable id: String): ResponseEntity<BuildDto> {
+    fun getBuildsWithId(
+        @PathVariable id: String,
+        @AuthenticationPrincipal principal: OAuth2User?
+    ): ResponseEntity<BuildDto> {
         val build = repo.findByIdOrNull(id.toInt())
-        return build?.let { ResponseEntity.ok(mapper.toDto(it, true)) } ?: ResponseEntity.notFound().build();
+        return build?.let { ResponseEntity.ok(mapper.toDto(it, true, principal?.name)) } ?: ResponseEntity.notFound()
+            .build();
     }
 
     @PostMapping()
     fun createBuilds(
-        @RequestBody build: BuildDto,
-        @AuthenticationPrincipal principal: OAuth2User?
+        @RequestBody buildDto: BuildDto,
+        @AuthenticationPrincipal principal: OAuth2User
     ): ResponseEntity<BuildDto> {
-        validatorFactory.createValidator(build)?.validate()
-        val savedBuild = repo.save(mapper.fromDto(build, principal?.name ?: "SPAM_AUTHor"))
-        return ResponseEntity.ok(mapper.toDto(savedBuild))
+        validatorFactory.createValidator(buildDto)?.validate()
+
+        val build = mapper.fromDto(buildDto, principal.name)
+        build.upvotes = 1
+        val savedBuild = repo.save(build)
+        voteRepo.save(BuildVotes(build = savedBuild, userName = principal.name, voteType = VoteType.UPVOTE))
+        return ResponseEntity.ok(mapper.toDto(savedBuild, false, principal.name))
     }
 
+    private fun validateSort(sortBy: String?): String {
+        val acceptedSort = listOf("upvotes", "timestampCreation");
+        return sortBy?.let { if (acceptedSort.contains(it)) it else null } ?: acceptedSort[0]
+    }
 }

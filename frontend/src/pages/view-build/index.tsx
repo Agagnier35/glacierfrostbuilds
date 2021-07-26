@@ -1,3 +1,4 @@
+import produce from 'immer';
 import React, { useContext, useEffect, useState } from 'react';
 import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
@@ -5,6 +6,8 @@ import { toast } from 'react-toastify';
 import { buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
 import GameRepository from '../../api/repository/gameRepository';
+import VoteRepository from '../../api/repository/voteRepository';
+import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
 import TalentBuilder from '../../components/talent-builder';
 import { AuthContext } from '../../utils/authProvider';
@@ -30,6 +33,50 @@ const ViewBuild = () => {
         GameRepository.getCurrentGameVersion().then(setGameVersion);
     }, [buildId]);
 
+    const upvote = (b: number) => {
+        VoteRepository.upvote(b).then(() =>
+            setBuild(
+                produce(build, (draft) => {
+                    switch (draft.userVote) {
+                        case 'DOWNVOTE':
+                            draft.upvotes += 2;
+                            break;
+                        case 'UPVOTE':
+                            draft.upvotes -= 1;
+                            draft.userVote = undefined;
+                            return;
+                        default:
+                            draft.upvotes += 1;
+                            break;
+                    }
+                    draft.userVote = 'UPVOTE';
+                }),
+            ),
+        );
+    };
+
+    const downvote = (b: number) => {
+        VoteRepository.downvote(b).then(() =>
+            setBuild(
+                produce(build, (draft) => {
+                    switch (draft.userVote) {
+                        case 'DOWNVOTE':
+                            draft.upvotes += 1;
+                            draft.userVote = undefined;
+                            return;
+                        case 'UPVOTE':
+                            draft.upvotes -= 2;
+                            break;
+                        default:
+                            draft.upvotes -= 1;
+                            break;
+                    }
+                    draft.userVote = 'DOWNVOTE';
+                }),
+            ),
+        );
+    };
+
     return (
         <div className="p-2 m-3 bg-primary rounded-3">
             {!build.buildId ? (
@@ -37,6 +84,15 @@ const ViewBuild = () => {
             ) : (
                 <>
                     <Row>
+                        <Col xs={2} sm={1} className="mx-3 d-flex justify-content-center align-items-center">
+                            <NumberPicker
+                                value={build.upvotes}
+                                canEditValue={false}
+                                status={build.userVote}
+                                increment={() => upvote(build.buildId ?? 0)}
+                                decrement={() => downvote(build.buildId ?? 0)}
+                            />
+                        </Col>
                         <Figure.Image
                             src={`./assets/classes/${build.playerClass.className}.png`}
                             style={{ maxWidth: '250px', maxHeight: '250px', objectFit: 'contain' }}

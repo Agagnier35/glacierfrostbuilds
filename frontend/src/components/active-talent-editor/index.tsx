@@ -90,6 +90,7 @@ const ActiveTalentEditor = ({ activeTalent }: ActiveTalentProps) => {
                         value={talentPoints}
                         onChange={(n) => changeBuildTalent('point', n)}
                         canEditValue={editMode}
+                        renderButtons={editMode}
                     />
                 </Col>
             </Row>

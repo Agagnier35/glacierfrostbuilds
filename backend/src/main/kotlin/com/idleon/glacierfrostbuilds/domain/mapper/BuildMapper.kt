@@ -5,6 +5,7 @@ import com.idleon.glacierfrostbuilds.api.exceptions.RestError
 import com.idleon.glacierfrostbuilds.api.exceptions.RestException
 import com.idleon.glacierfrostbuilds.api.exceptions.RestIssueFactory
 import com.idleon.glacierfrostbuilds.domain.model.Build
+import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.PlayerClassRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.TagsRepository
 import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_INVALID
@@ -41,21 +42,40 @@ abstract class BuildMapper {
     @Autowired
     protected lateinit var playerClassRepository: PlayerClassRepository
 
+    @Autowired
+    protected lateinit var voteRepository: BuildVotesRepository
+
 
     @Mappings(
         Mapping(target = "tags", expression = "java(tagsMapper.toDto(source.getTags()))"),
-        Mapping(target = "playerClass", expression = "java(withTalents ? playerClassMapper.toDto(source.getPlayerClass()): playerClassMapper.toDtoNoTalents(source.getPlayerClass()))"),
-        Mapping(target = "talents", expression = "java(buildTalentsMapper.toDto(source.getTalents()))")
+        Mapping(
+            target = "playerClass",
+            expression = "java(withTalents ? playerClassMapper.toDto(source.getPlayerClass()): playerClassMapper.toDtoNoTalents(source.getPlayerClass()))"
+        ),
+        Mapping(target = "talents", expression = "java(buildTalentsMapper.toDto(source.getTalents()))"),
+        Mapping(
+            target = "userVote",
+            expression = "java(voteRepository.getVoteForBuildAndUser(source.getBuildId(), userRequestName) != null ? voteRepository.getVoteForBuildAndUser(source.getBuildId(), userRequestName).getVoteType() : null)"
+        )
     )
-    abstract fun toDto(source: Build, @Context withTalents: Boolean = false): BuildDto
-    abstract fun toDto(source: List<Build>, @Context withTalents: Boolean = false): List<BuildDto>
+    abstract fun toDto(
+        source: Build,
+        @Context withTalents: Boolean = false,
+        @Context userRequestName: String?
+    ): BuildDto
+
+    abstract fun toDto(
+        source: List<Build>,
+        @Context withTalents: Boolean = false,
+        @Context userRequestName: String?
+    ): List<BuildDto>
 
 
     @Mappings(
         Mapping(target = "author", expression = "java(authorName)"),
         Mapping(target = "playerClass", ignore = true),
         Mapping(target = "tags", ignore = true),
-        Mapping(target = "talents", ignore = true)
+        Mapping(target = "talents", ignore = true),
     )
     abstract fun fromDto(source: BuildDto, @Context authorName: String): Build
 

@@ -1,7 +1,7 @@
 import produce from 'immer';
 import React, { createContext, useEffect, useState } from 'react';
 import { Accordion, Button, Container } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 import Build, { buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
 import ClassSelector from '../../components/class-selector';
@@ -22,6 +22,7 @@ export const BuildContext = createContext<BuildContextProps>({
 });
 
 const CreateBuild = () => {
+    const history = useHistory();
     const [build, editBuild] = useState<Build>(buildDefaultBuild());
     const gameVers = useCurrentGameVersion();
 
@@ -37,8 +38,9 @@ const CreateBuild = () => {
     }, [gameVers, build.gameVersion]);
     /* eslint-enable */
 
-    const createBuild = () => {
-        BuildRepository.postBuild(build).then((b) => toast.success(`Build Created, ${b?.buildId}`));
+    const createBuild = async () => {
+        const newBuild = await BuildRepository.postBuild(build);
+        history.push(`/builds/${newBuild.buildId}`);
     };
 
     return (
