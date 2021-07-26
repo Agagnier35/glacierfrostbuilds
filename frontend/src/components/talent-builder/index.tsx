@@ -11,7 +11,7 @@ const TalentBuilder = () => {
     const { playerClass } = build;
 
     useEffect(() => {
-        if (playerClass?.className) {
+        if (playerClass?.talents?.length === 0) {
             PlayerClassRepository.getClassWithName(playerClass.className).then((pc) =>
                 editBuild(
                     produce(build, (draft) => {
@@ -24,7 +24,7 @@ const TalentBuilder = () => {
     }, [playerClass?.className, editBuild]);
     /* eslint-enable */
 
-    if (playerClass) {
+    if (playerClass?.talents?.length > 0) {
         const numberOfTabs = Math.max(...playerClass.talents.map((t) => t.displayTab));
 
         const talentCards = [];

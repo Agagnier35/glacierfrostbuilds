@@ -3,6 +3,7 @@ package com.idleon.glacierfrostbuilds.config
 import com.idleon.glacierfrostbuilds.config.oath.RestOAuth2AccessTokenResponseClient
 import com.idleon.glacierfrostbuilds.config.oath.RestOAuth2UserService
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate
 
 @Configuration
 @EnableWebSecurity
+@Profile("!disable-security")
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
@@ -57,7 +59,5 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .failureHandler { request, response, _ ->
                 response.sendRedirect(if (request.serverName == "localhost") "http://localhost:3000/error" else "/error")
             }
-
-
     }
 }

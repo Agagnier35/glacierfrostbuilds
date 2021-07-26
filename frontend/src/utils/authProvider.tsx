@@ -21,11 +21,28 @@ export const AuthContext = createContext<AuthContextType>({
 const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [auth, setAuth] = useState<Auth>();
 
+    const storedUser = localStorage.getItem('auth');
+    if (!auth?.user && storedUser) {
+        setAuth({ user: storedUser });
+    }
+
     useEffect(() => {
-        AuthRepository.getUserSession().then((u) => setAuth({ user: u }));
+        AuthRepository.getUserSession()
+            .then((u) => {
+                localStorage.setItem('auth', u);
+                setAuth({ user: u });
+            })
+            .catch(() => {
+                localStorage.removeItem('auth');
+                setAuth(undefined);
+            });
     }, []);
 
-    const logout = () => AuthRepository.logout().then(() => setAuth(undefined));
+    const logout = () =>
+        AuthRepository.logout().then(() => {
+            localStorage.removeItem('auth');
+            setAuth(undefined);
+        });
 
     const authContextValue = useMemo(() => ({ auth, setAuth, logout }), [auth, setAuth]);
 

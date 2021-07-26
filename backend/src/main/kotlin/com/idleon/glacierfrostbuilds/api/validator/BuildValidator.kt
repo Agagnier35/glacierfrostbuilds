@@ -5,18 +5,19 @@ import com.idleon.glacierfrostbuilds.api.exceptions.RestIssueFactory
 import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_INVALID
 import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_NOT_BLANK
 import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_NOT_GREATER_THAN_0
-import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_NOT_LOGGED_IN
+import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_TOO_LONG
 
 class BuildValidator(private val build: BuildDto, private val issueFactory: RestIssueFactory) :
     AbstractValidator<BuildDto>() {
 
     override fun doValidate() {
         validateBuildName()
-        validateAuthor()
+        validateDescription()
         validateGameVersion()
         validateMaxLevel()
         validateMinLevel()
         validateClassName()
+        validateTalents()
     }
 
     private fun validateBuildName() {
@@ -26,18 +27,34 @@ class BuildValidator(private val build: BuildDto, private val issueFactory: Rest
                     MSG_INVALID, "buildName", detail = MSG_NOT_BLANK
                 )
             )
+        } else if (build.buildName.length > 255) {
+            problem.addIssue(
+                issueFactory.createIssue(
+                    MSG_INVALID, "buildName", detail = MSG_TOO_LONG, meta = hashMapOf(Pair("limit", 255))
+                )
+            )
         }
     }
 
-    private fun validateAuthor() {
-        if (build.author.isBlank()) {
-            problem.addIssue(issueFactory.createIssue(MSG_NOT_LOGGED_IN, "author"))
+    private fun validateDescription() {
+        if (build.description != null && build.description.length > 1024) {
+            problem.addIssue(
+                issueFactory.createIssue(
+                    MSG_INVALID, "description", detail = MSG_TOO_LONG, meta = hashMapOf(Pair("limit", 1024))
+                )
+            )
         }
     }
 
     private fun validateGameVersion() {
         if (build.gameVersion.isBlank()) {
             problem.addIssue(issueFactory.createIssue(MSG_INVALID, "gameVersion", detail = MSG_NOT_BLANK))
+        } else if (build.buildName.length > 50) {
+            problem.addIssue(
+                issueFactory.createIssue(
+                    MSG_INVALID, "gameVersion", detail = MSG_TOO_LONG, meta = hashMapOf(Pair("limit", 50))
+                )
+            )
         }
     }
 
@@ -57,5 +74,20 @@ class BuildValidator(private val build: BuildDto, private val issueFactory: Rest
         if (build.playerClass.className.isBlank()) {
             problem.addIssue(issueFactory.createIssue(MSG_INVALID, "playerClass", detail = MSG_NOT_BLANK))
         }
+    }
+
+    private fun validateTalents() {
+        build.talents.forEach {
+            if (it.comments != null && it.comments.length > 1024)
+                problem.addIssue(
+                    issueFactory.createIssue(
+                        MSG_INVALID,
+                        "talent ${it.talentId}",
+                        detail = MSG_TOO_LONG,
+                        meta = hashMapOf(Pair("limit", 1024))
+                    )
+                )
+        }
+
     }
 }

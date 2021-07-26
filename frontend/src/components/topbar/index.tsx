@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { serverUrl } from '../../api/apiGateway';
 import { AuthContext } from '../../utils/authProvider';
@@ -9,43 +9,49 @@ const Topbar = () => {
     const { auth, logout } = useContext(AuthContext);
 
     return (
-        <Navbar bg="primary" variant="dark" className="mb-3">
-            <Container fluid>
-                <Navbar.Brand>
-                    <Mascot src="assets/GlacierFrostMascot.png" />
-                    <Link to="/" className="home-link">
-                        GlacierFrost2Builds
-                    </Link>
-                </Navbar.Brand>
-                <Nav className="me-auto">
+        <Navbar bg="primary" variant="dark" className="mb-3 px-3" expand="md">
+            <Navbar.Brand>
+                <Mascot src="assets/GlacierFrostMascot.png" />
+                <Link to="/" className="home-link">
+                    GlacierFrost2Builds
+                </Link>
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+                <Nav>
                     <Nav.Item>
-                        <Link to="/create" className="nav-link">
-                            Create
+                        <Link to="/builds" className="nav-link">
+                            Search
                         </Link>
                     </Nav.Item>
+                    {auth && (
+                        <Nav.Item>
+                            <Link to="/create" className="nav-link">
+                                Create
+                            </Link>
+                        </Nav.Item>
+                    )}
                     <Nav.Item>
                         <Link to="/about" className="nav-link">
                             About
                         </Link>
                     </Nav.Item>
                 </Nav>
-            </Container>
 
-            <Container className="justify-content-end">
-                {auth?.user ? (
-                    <>
-                        <Nav.Item className="text-success" style={{ marginRight: '1rem' }}>
-                            {auth.user}
-                        </Nav.Item>
-                        <Nav.Link onClick={logout}>Logout</Nav.Link>
-                    </>
-                ) : (
-                    <>
-                        <Nav.Item style={{ marginRight: '1rem' }}>Logins:</Nav.Item>
-                        <Nav.Link href={`${serverUrl}/oauth2/authorization/discord`}>Discord</Nav.Link>
-                    </>
-                )}
-            </Container>
+                <Nav className="ms-auto">
+                    {auth?.user ? (
+                        <NavDropdown title={auth.user} id="nav-dropdown" align="end" className="text-success">
+                            <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+                        </NavDropdown>
+                    ) : (
+                        <NavDropdown title="Login" id="nav-dropdown" align="end">
+                            <NavDropdown.Item href={`${serverUrl}/oauth2/authorization/discord`}>
+                                Discord
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                    )}
+                </Nav>
+            </Navbar.Collapse>
         </Navbar>
     );
 };

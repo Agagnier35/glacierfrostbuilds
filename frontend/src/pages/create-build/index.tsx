@@ -8,29 +8,33 @@ import ClassSelector from '../../components/class-selector';
 import GeneralInformation from '../../components/general-informations';
 import TalentBuilder from '../../components/talent-builder';
 import useCurrentGameVersion from '../../hooks/useCurrentGameVersion';
-import useHandleApiError from '../../hooks/useHandleApiError';
 import { CenterDiv } from './style';
 
 interface BuildContextProps {
     build: Build;
     editBuild(b: Build): void;
+    editMode: boolean;
 }
-export const BuildContext = createContext<BuildContextProps>({ build: buildDefaultBuild(), editBuild: () => {} });
+export const BuildContext = createContext<BuildContextProps>({
+    build: buildDefaultBuild(),
+    editBuild: () => {},
+    editMode: false,
+});
 
 const CreateBuild = () => {
-    useHandleApiError();
-
     const [build, editBuild] = useState<Build>(buildDefaultBuild());
     const gameVers = useCurrentGameVersion();
 
     useEffect(() => {
-        editBuild(
-            produce(build, (draft) => {
-                draft.gameVersion = gameVers;
-            }),
-        );
+        if (!build.gameVersion) {
+            editBuild(
+                produce(build, (draft) => {
+                    draft.gameVersion = gameVers;
+                }),
+            );
+        }
         /* eslint-disable */
-    }, [gameVers]);
+    }, [gameVers, build.gameVersion]);
     /* eslint-enable */
 
     const createBuild = () => {
@@ -38,7 +42,7 @@ const CreateBuild = () => {
     };
 
     return (
-        <BuildContext.Provider value={{ build, editBuild }}>
+        <BuildContext.Provider value={{ build, editBuild, editMode: true }}>
             <Container fluid>
                 <Accordion defaultActiveKey="0" className="mb-3">
                     <Accordion.Item eventKey="0">

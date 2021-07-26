@@ -3,17 +3,17 @@ import Tags from '../../api/model/tags';
 const getColorForTag = (t: Tags) => {
     switch (t.category) {
         case 'Skill':
-            return '#85d4d5';
+            return { bg: 'info', hex: '#5bc0de' };
         case 'Focus':
-            return '#ff3399';
+            return { bg: 'warning', hex: '#f89406' };
         case 'Fighting':
-            return '#4CBBFC';
+            return { bg: 'danger', hex: '#ee5f5b' };
         case 'World':
-            return '#aad28c';
+            return { bg: 'secondary', hex: '#7a8288' };
         case 'Other':
-            return '#b79757';
+            return { bg: 'primary', hex: '#3a3f44' };
         default:
-            return '#ddd';
+            return { bg: '', hex: '#' };
     }
 };
 

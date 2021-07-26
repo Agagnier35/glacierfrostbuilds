@@ -6,9 +6,10 @@ export const OneTalentContainer = styled(Col)`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 `;
 
 export const TalentPointCounter = styled.p`
     text-align: center;
-    margin-bottom: 0;
+    margin-bottom: 0.25rem;
 `;

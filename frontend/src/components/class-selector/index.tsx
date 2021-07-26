@@ -1,6 +1,6 @@
 import produce from 'immer';
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Col, Container, Image, Row } from 'react-bootstrap';
+import { Button, Col, Container, Figure, Row } from 'react-bootstrap';
 import PlayerClassRepository from '../../api/repository/playerClassRepository';
 import { BuildContext } from '../../pages/create-build';
 
@@ -20,20 +20,19 @@ const ClassSelector = () => {
                     <Col
                         key={c}
                         as={Button}
-                        active={c === build?.playerClass?.className}
+                        variant={`${c === build?.playerClass?.className ? 'secondary' : 'outline-primary'}`}
                         onClick={() =>
                             editBuild(
                                 produce(build, (draft) => {
-                                    if (!draft?.playerClass) {
-                                        draft.playerClass = { className: c, talents: [] };
-                                    }
-                                    draft.playerClass.className = c;
-                                    draft.talents = [];
+                                    draft.playerClass = { className: c, talents: [] };
                                 }),
                             )
                         }
                     >
-                        <Image src={`assets/classes/${c}.png`} fluid />
+                        <Figure.Image
+                            src={`./assets/classes/${c}.png`}
+                            style={{ maxWidth: '90px', maxHeight: '90px', objectFit: 'contain' }}
+                        />
                     </Col>
                 ))}
             </Row>

@@ -19,5 +19,8 @@ abstract class PlayerClassMapper {
     abstract fun toDto(source: PlayerClass): PlayerClassDto
 
     @Mapping(target = "talents", ignore = true)
+    abstract fun toDtoNoTalents(source: PlayerClass): PlayerClassDto
+
+    @Mapping(target = "talents", ignore = true)
     abstract fun fromDto(source: PlayerClassDto): PlayerClass
 }

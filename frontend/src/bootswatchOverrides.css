@@ -1,22 +1,3 @@
-/* Fixes background buttons not staying active*/
-
-.btn-primary:not([disabled]):not(.disabled).active:hover,
-.btn-primary:not([disabled]):not(.disabled):active:hover,
-.btn-primary:not([disabled]):not(.disabled):focus,
-.btn-primary:not([disabled]):not(.disabled):hover {
-    border-color: rgba(0, 0, 0, 0.6);
-}
-
-.btn:focus,
-.btn:hover,
-.btn:not([disabled]):not(.disabled).active:hover,
-.btn:not([disabled]):not(.disabled):active,
-.btn:not([disabled]):not(.disabled).active,
-.btn:not([disabled]):not(.disabled):active:hover {
-    background-image: linear-gradient(#25282c, #292c30 40%, #2b2f32);
-    filter: none;
-}
-
 .accordion-item {
     background-color: #32383e;
 }

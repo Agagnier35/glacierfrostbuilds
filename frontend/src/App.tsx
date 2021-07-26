@@ -10,36 +10,43 @@ import Topbar from './components/topbar';
 import About from './pages/about';
 import CreateBuild from './pages/create-build';
 import Home from './pages/home';
+import SearchBuild from './pages/search-build';
+import ViewBuild from './pages/view-build';
 import AuthProvider from './utils/authProvider';
+import PrivateRoute from './utils/privateRoute';
 
-const App = () => (
-    <Router>
-        <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
-        <AuthProvider>
-            <Topbar />
+const App = () => {
+    return (
+        <Router>
+            <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
+            <AuthProvider>
+                <Topbar />
 
-            <Switch>
-                <Route path="/" exact>
-                    <ErrorBoundary>
-                        <Home />
-                    </ErrorBoundary>
-                </Route>
-                <Route path="/create">
-                    <ErrorBoundary>
-                        <CreateBuild />
-                    </ErrorBoundary>
-                </Route>
-                <Route path="/about">
-                    <ErrorBoundary>
-                        <About />
-                    </ErrorBoundary>
-                </Route>
-                <Route path="/error">
-                    <ErrorFallback error={{ stack: 'Backend Auth Failure' }} />
-                </Route>
-            </Switch>
-        </AuthProvider>
-    </Router>
-);
+                <ErrorBoundary>
+                    <Switch>
+                        <Route path="/" exact>
+                            <Home />
+                        </Route>
+                        <Route exact path="/builds">
+                            <SearchBuild />
+                        </Route>
+                        <Route path="/builds/:buildId">
+                            <ViewBuild />
+                        </Route>
+                        <PrivateRoute path="/create">
+                            <CreateBuild />
+                        </PrivateRoute>
+                        <Route path="/about">
+                            <About />
+                        </Route>
+                        <Route path="/error">
+                            <ErrorFallback error={{ stack: 'Backend Auth Failure' }} />
+                        </Route>
+                    </Switch>
+                </ErrorBoundary>
+            </AuthProvider>
+        </Router>
+    );
+};
 
 export default App;

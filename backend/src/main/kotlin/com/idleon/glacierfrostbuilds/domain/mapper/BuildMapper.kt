@@ -44,19 +44,20 @@ abstract class BuildMapper {
 
     @Mappings(
         Mapping(target = "tags", expression = "java(tagsMapper.toDto(source.getTags()))"),
-        Mapping(target = "playerClass", expression = "java(playerClassMapper.toDto(source.getPlayerClass()))"),
+        Mapping(target = "playerClass", expression = "java(withTalents ? playerClassMapper.toDto(source.getPlayerClass()): playerClassMapper.toDtoNoTalents(source.getPlayerClass()))"),
         Mapping(target = "talents", expression = "java(buildTalentsMapper.toDto(source.getTalents()))")
     )
-    abstract fun toDto(source: Build): BuildDto
-    abstract fun toDto(source: List<Build>): List<BuildDto>
+    abstract fun toDto(source: Build, @Context withTalents: Boolean = false): BuildDto
+    abstract fun toDto(source: List<Build>, @Context withTalents: Boolean = false): List<BuildDto>
 
 
     @Mappings(
+        Mapping(target = "author", expression = "java(authorName)"),
         Mapping(target = "playerClass", ignore = true),
         Mapping(target = "tags", ignore = true),
         Mapping(target = "talents", ignore = true)
     )
-    abstract fun fromDto(source: BuildDto): Build
+    abstract fun fromDto(source: BuildDto, @Context authorName: String): Build
 
     @AfterMapping
     fun afterFromDto(source: BuildDto, @MappingTarget target: Build?): Build? {
@@ -82,6 +83,6 @@ abstract class BuildMapper {
         )
     }
 
-    abstract fun fromDto(source: List<BuildDto>): List<Build>
+    abstract fun fromDto(source: List<BuildDto>, @Context authorName: String): List<Build>
 }
 

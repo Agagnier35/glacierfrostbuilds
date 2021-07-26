@@ -26,11 +26,11 @@ const TagEditor = () => {
 
     const colorStyles = {
         option: (styles: any, { data, isFocused, isSelected }: any) => {
-            const color = chroma(getColorForTag(data));
+            const color = chroma(getColorForTag(data).hex);
             return {
                 ...styles,
                 backgroundColor: isSelected ? color.css() : isFocused ? color.alpha(0.1).css() : color.alpha(0.5).css(),
-                color: chroma.contrast(color, 'white') > 2 ? 'white' : 'black',
+                color: isFocused ? 'black' : 'white',
                 border: `1px solid ${color.css()}`,
 
                 ':active': {
@@ -40,7 +40,7 @@ const TagEditor = () => {
             };
         },
         multiValue: (styles: any, { data }: any) => {
-            const color = chroma(getColorForTag(data));
+            const color = chroma(getColorForTag(data).hex);
             return {
                 ...styles,
                 border: `1px solid ${color.css()}`,
@@ -48,14 +48,14 @@ const TagEditor = () => {
             };
         },
         multiValueLabel: (styles: any, { data }: any) => {
-            const color = chroma(getColorForTag(data));
+            const color = chroma(getColorForTag(data).hex);
             return {
                 ...styles,
                 color: chroma.contrast(color, 'white') > 2 ? 'white' : 'black',
             };
         },
         multiValueRemove: (styles: any, { data }: any) => {
-            const color = chroma(getColorForTag(data));
+            const color = chroma(getColorForTag(data).hex);
             return {
                 ...styles,
                 color,

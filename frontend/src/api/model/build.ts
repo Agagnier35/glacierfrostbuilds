@@ -19,7 +19,7 @@ export default interface Build {
 export const buildDefaultBuild = (): Build => ({
     buildName: '',
     description: '',
-    author: 'TODO',
+    author: '',
     upvotes: 0,
     gameVersion: '',
     talents: [],
