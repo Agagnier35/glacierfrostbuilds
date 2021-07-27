@@ -7,6 +7,7 @@ import com.idleon.glacierfrostbuilds.domain.mapper.BuildMapper
 import com.idleon.glacierfrostbuilds.domain.model.*
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
+import com.idleon.glacierfrostbuilds.utils.getNameFromPrincipal
 import com.idleon.glacierfrostbuilds.utils.UnpagedSort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -72,7 +73,7 @@ class BuildsController @Autowired constructor(
 
         return ResponseEntity.ok(
             BuildListDto(
-                mapper.toDto(buildResults.content, false, principal?.name),
+                mapper.toDto(buildResults.content, false, getNameFromPrincipal(principal)),
                 buildResults.totalElements,
                 buildResults.totalPages
             )
@@ -91,7 +92,7 @@ class BuildsController @Autowired constructor(
         @AuthenticationPrincipal principal: OAuth2User?
     ): ResponseEntity<BuildDto> {
         val build = repo.findByIdOrNull(id.toInt())
-        return build?.let { ResponseEntity.ok(mapper.toDto(it, true, principal?.name)) } ?: ResponseEntity.notFound()
+        return build?.let { ResponseEntity.ok(mapper.toDto(it, true, getNameFromPrincipal(principal)))  } ?: ResponseEntity.notFound()
             .build();
     }
 
@@ -102,11 +103,12 @@ class BuildsController @Autowired constructor(
     ): ResponseEntity<BuildDto> {
         validatorFactory.createValidator(buildDto)?.validate()
 
-        val build = mapper.fromDto(buildDto, principal.name)
+        val userName = getNameFromPrincipal(principal)!!
+        val build = mapper.fromDto(buildDto, userName)
         build.upvotes = 1
         val savedBuild = repo.save(build)
-        voteRepo.save(BuildVotes(build = savedBuild, userName = principal.name, voteType = VoteType.UPVOTE))
-        return ResponseEntity.ok(mapper.toDto(savedBuild, false, principal.name))
+        voteRepo.save(BuildVotes(build = savedBuild, userName = userName, voteType = VoteType.UPVOTE))
+        return ResponseEntity.ok(mapper.toDto(savedBuild, false, userName))
     }
 
     private fun validateSort(sortBy: String?): String {

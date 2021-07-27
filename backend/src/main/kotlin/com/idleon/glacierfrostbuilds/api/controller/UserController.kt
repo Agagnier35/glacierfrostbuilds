@@ -1,5 +1,6 @@
 package com.idleon.glacierfrostbuilds.api.controller
 
+import com.idleon.glacierfrostbuilds.utils.getNameFromPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -16,10 +17,7 @@ class UserController {
 
     @GetMapping
     fun getLoggedInUsername(@AuthenticationPrincipal principal: OAuth2User?): ResponseEntity<String?> {
-        return if (principal != null)
-            ResponseEntity.ok(principal.name)
-        else
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .build()
+        return principal?.let { ResponseEntity.ok(getNameFromPrincipal(it)) }
+            ?: ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
 }

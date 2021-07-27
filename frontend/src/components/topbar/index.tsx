@@ -48,6 +48,9 @@ const Topbar = () => {
                             <NavDropdown.Item href={`${serverUrl}/oauth2/authorization/discord`}>
                                 Discord
                             </NavDropdown.Item>
+                            <NavDropdown.Item href={`${serverUrl}/oauth2/authorization/google`}>
+                                Google
+                            </NavDropdown.Item>
                         </NavDropdown>
                     )}
                 </Nav>

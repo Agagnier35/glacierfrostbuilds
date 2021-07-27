@@ -26,15 +26,15 @@ spring:
     oauth2:
       client:
         registration:
-          github:
-            client-id: github-client-id
-            client-secret: github-client-secret
           google:
-            client-id: google-client-id
-            client-secret: google-client-secret
+            client-id: ${googleClientId}
+            client-secret: ${googleClientSecret}
+            redirect-uri: "{baseUrl}/api/v1/login/oauth2/code/google"
+            authorization-grant-type: authorization_code
+            scope: "profile"
           discord:
-            client-id: 867947871549403186
-            client-secret: k_xUVDPS8UkLIuEQpLMQJk6qhg0B_5mU
+            client-id: ${discordClientId}
+            client-secret: ${discordClientSecret}
             client-authentication-method: post
             authorization-grant-type: authorization_code
             scope:

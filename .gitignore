@@ -37,3 +37,4 @@ out/
 .vscode/
 
 frontend/src/api/model/validators/*-ti.ts
+application.properties

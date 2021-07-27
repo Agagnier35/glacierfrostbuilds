@@ -5,6 +5,7 @@ import com.idleon.glacierfrostbuilds.domain.model.BuildVotes
 import com.idleon.glacierfrostbuilds.domain.model.VoteType
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
+import com.idleon.glacierfrostbuilds.utils.getNameFromPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
@@ -30,12 +31,13 @@ class VoteController @Autowired constructor(
     ): ResponseEntity<Unit> {
         val build = buildRepo.findByIdOrNull(buildId.toInt()) ?: return ResponseEntity.notFound().build()
 
-        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), principal.name)
+        val userName = getNameFromPrincipal(principal)!!
+        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), userName)
         if (previousVote?.voteType === VoteType.UPVOTE) {
             build.upvotes -= 1
             voteRepo.delete(previousVote)
         } else {
-            val updatedVote = previousVote ?: BuildVotes(build = build, userName = principal.name)
+            val updatedVote = previousVote ?: BuildVotes(build = build, userName = userName)
             build.upvotes += if (previousVote?.voteType === VoteType.DOWNVOTE) 2 else 1;
             updatedVote.voteType = VoteType.UPVOTE
             voteRepo.save(updatedVote)
@@ -52,13 +54,14 @@ class VoteController @Autowired constructor(
     ): ResponseEntity<Unit> {
         val build = buildRepo.findByIdOrNull(buildId.toInt()) ?: return ResponseEntity.notFound().build()
 
-        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), principal.name)
+        val userName = getNameFromPrincipal(principal)!!
+        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), userName)
         if (previousVote?.voteType === VoteType.DOWNVOTE) {
             build.upvotes += 1
             voteRepo.delete(previousVote)
         } else {
             val updatedVote =
-                previousVote ?: BuildVotes(build = build, userName = principal.name, voteType = VoteType.DOWNVOTE)
+                previousVote ?: BuildVotes(build = build, userName = userName, voteType = VoteType.DOWNVOTE)
             build.upvotes -= if (previousVote?.voteType === VoteType.UPVOTE) 2 else 1;
             updatedVote.voteType = VoteType.DOWNVOTE
             voteRepo.save(updatedVote)
