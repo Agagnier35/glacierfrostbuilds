@@ -24,13 +24,13 @@ const Topbar = () => {
                             Search
                         </Link>
                     </Nav.Item>
-                    {auth && (
-                        <Nav.Item>
-                            <Link to="/create" className="nav-link">
-                                Create
-                            </Link>
-                        </Nav.Item>
-                    )}
+
+                    <Nav.Item>
+                        <Link to="/create" className="nav-link">
+                            Create
+                        </Link>
+                    </Nav.Item>
+
                     <Nav.Item>
                         <Link to="/about" className="nav-link">
                             About

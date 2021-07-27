@@ -45,6 +45,7 @@ const SearchResultBuilds = ({
                     fluid
                     key={b.buildId}
                     className="bg-primary rounded-1 my-2"
+                    style={{ cursor: 'pointer' }}
                     onClick={() => history.push(`/builds/${b.buildId}`)}
                 >
                     <Row>

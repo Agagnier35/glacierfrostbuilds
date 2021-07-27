@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Figure, Row } from 'react-bootstrap';
+import { Button, Figure, Nav, Row } from 'react-bootstrap';
 import { RepoCard } from 'react-github-cards';
 import 'react-github-cards/dist/default.css';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import BuildRepository from '../../api/repository/buildRepository';
 import GameRepository from '../../api/repository/gameRepository';
@@ -43,6 +43,18 @@ const Home = () => {
                 <span className="text-info">GlacierFrost2</span>
             </Splash>
             <FunniQuote className="bg-primary">{quote}</FunniQuote>
+            <Nav className="m-3 p-3 bg-primary rounded-3 d-flex" style={{ justifyContent: 'space-evenly' }}>
+                <Nav.Item>
+                    <Button as={Link} size="lg" variant="info" to="/builds" className="nav-link">
+                        Search for builds
+                    </Button>
+                </Nav.Item>
+                <Nav.Item>
+                    <Button as={Link} size="lg" variant="info" to="/create" className="nav-link">
+                        Create a build
+                    </Button>
+                </Nav.Item>
+            </Nav>
             <div className="m-3 p-3 bg-primary rounded-3">
                 <Row>
                     <SellingPoint lg={4} sm={6}>

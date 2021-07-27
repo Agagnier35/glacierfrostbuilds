@@ -13,7 +13,6 @@ import Home from './pages/home';
 import SearchBuild from './pages/search-build';
 import ViewBuild from './pages/view-build';
 import AuthProvider from './utils/authProvider';
-import PrivateRoute from './utils/privateRoute';
 
 const App = () => {
     return (
@@ -33,9 +32,9 @@ const App = () => {
                         <Route path="/builds/:buildId">
                             <ViewBuild />
                         </Route>
-                        <PrivateRoute path="/create">
+                        <Route path="/create">
                             <CreateBuild />
-                        </PrivateRoute>
+                        </Route>
                         <Route path="/about">
                             <About />
                         </Route>
