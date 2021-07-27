@@ -1,4 +1,4 @@
-# [Glacier Frost 2 Builds](https://glacierfrost2builds.herokuapp.com/)
+# [GlacierFrost2's Builds](https://glacierfrost2builds.herokuapp.com/)
 
 Introducing LavaFlame2's biggest enemy: GlacierFrost2
 
@@ -6,7 +6,7 @@ Create and share your builds for the game [Legends of Idleon](https://www.legend
 to have one place to share user-generated builds.
 
 I made this tool because we had an excel sheet, which got deprecated for the idleoncompanion
-Then ideloncommpanion hasn't updated been in a while, making the builds deprecated
+Then ideloncompanion hasn't updated been in a while, making the builds deprecated
 
 The ultimate goal would be to have a tool, with minimal maintenance by the developers. In the best case scenario, the
 only thing we need to update is new assets/classes/talents/bump game version, but the rest would be managed by the users

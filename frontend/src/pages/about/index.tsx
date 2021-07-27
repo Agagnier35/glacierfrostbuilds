@@ -8,7 +8,7 @@ const About = () => {
                 <Card.Header>About</Card.Header>
                 <Card.Body>
                     <p>
-                        GlacierFrost2Builds is open-source and you can find the code{' '}
+                        GlacierFrost2's Builds is open-source and you can find the code{' '}
                         <a href="https://github.com/Agagnier35/glacierfrostbuilds">here</a>
                     </p>
                     <br />
@@ -69,6 +69,10 @@ const About = () => {
                 <Card.Header>Changelog</Card.Header>
                 <Card.Body>
                     <Container fluid>
+                        <Row>
+                            <h3>v0.1.2</h3>
+                            <p>Add a more intersting homepage</p>
+                        </Row>
                         <Row>
                             <h3>v0.1.1</h3>
                             <p>Add Upvotes/downvote builds</p>

@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.idleon"
-version = "0.1.1"
+version = "0.1.2"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -64,4 +64,8 @@ tasks.withType<Test> {
 
 tasks.matching { it.name !== "clean" }.all {
     mustRunAfter(":frontend:webjar")
+}
+
+tasks.getByName<Jar>("jar") {
+    enabled = false
 }

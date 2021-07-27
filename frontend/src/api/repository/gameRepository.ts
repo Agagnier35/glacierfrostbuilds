@@ -1,6 +1,7 @@
 import apiGateway from '../apiGateway';
 
 class GameRepositoryAPI {
+    getQuote = () => apiGateway.get<void, string>('/quote');
     getCurrentGameVersion = () => apiGateway.get<void, string>('/version');
 }
 

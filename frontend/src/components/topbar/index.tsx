@@ -13,7 +13,7 @@ const Topbar = () => {
             <Navbar.Brand>
                 <Mascot src="assets/GlacierFrostMascot.png" />
                 <Link to="/" className="home-link">
-                    GlacierFrost2Builds
+                    GlacierFrost2's Builds
                 </Link>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
