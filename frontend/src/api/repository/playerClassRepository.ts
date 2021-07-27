@@ -1,5 +1,5 @@
 import apiGateway from '../apiGateway';
-import PlayerClass from '../model/player-class';
+import { PlayerClass } from '../model/player-class';
 
 class PlayerClassRepositoryAPI {
     getPlayerClassNames = () => apiGateway.get<void, string[]>('/classes');

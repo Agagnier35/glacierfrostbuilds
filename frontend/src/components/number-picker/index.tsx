@@ -25,7 +25,7 @@ const NumberPicker = ({
         const number =
             e.target.value === '' ? 0 : /^[-+]?(\d+|Infinity)$/.test(e.target.value) ? parseInt(e.target.value) : NaN;
 
-        if (!isNaN(number) && number >= 0) {
+        if (!isNaN(number) && number >= 0 && number < 1000) {
             onChange(number);
         }
     };

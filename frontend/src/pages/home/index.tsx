@@ -101,12 +101,6 @@ const Home = () => {
                     </SellingPoint>
                 </Row>
             </div>
-            <div className="m-3 p-3 bg-primary rounded-3">
-                I made this tool because we had an excel sheet, which got deprecated for the idleoncompanion.
-                <br />
-                <br />
-                Then idleoncompanion hasn't updated been in a while, making their builds deprecated
-            </div>
         </>
     );
 };

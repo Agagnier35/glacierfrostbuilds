@@ -1,8 +1,8 @@
-export default interface Talents {
+export interface Talents {
     talentId: number;
-    talentName: String;
+    talentName: string;
     className: string;
     displayTab: number;
     displayOrder: number;
-    description: String;
+    description: string;
 }

@@ -1,8 +1,8 @@
 import produce from 'immer';
 import React, { useState } from 'react';
 import { Accordion, Container } from 'react-bootstrap';
-import BuildList from '../../api/model/build-list';
-import Tags from '../../api/model/tags';
+import { BuildList } from '../../api/model/build-list';
+import { Tags } from '../../api/model/tags';
 import BuildRepository from '../../api/repository/buildRepository';
 import VoteRepository from '../../api/repository/voteRepository';
 import SearchForm from '../../components/search-form';

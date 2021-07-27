@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Col, Container, Figure, Pagination, Row } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import BuildList from '../../api/model/build-list';
+import { BuildList } from '../../api/model/build-list';
 import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
 import { CenterDiv } from '../create-build/style';

@@ -1,6 +1,6 @@
-import Build from './build';
+import { Build } from './build';
 
-export default interface BuildList {
+export interface BuildList {
     builds: Build[];
     numberOfBuild: number;
     numberOfPages: number;

@@ -1,8 +1,10 @@
+import base64url from 'base64url';
 import produce from 'immer';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Accordion, Button, Container, Figure } from 'react-bootstrap';
+import { Accordion, Button, Container, Figure, Form, FormGroup } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import Build, { buildDefaultBuild } from '../../api/model/build';
+import { toast } from 'react-toastify';
+import { Build, buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
 import ClassSelector from '../../components/class-selector';
 import GeneralInformation from '../../components/general-informations';
@@ -10,6 +12,7 @@ import TalentBuilder from '../../components/talent-builder';
 import useCurrentGameVersion from '../../hooks/useCurrentGameVersion';
 import { AuthContext } from '../../utils/authProvider';
 import { CenterDiv } from './style';
+const zlib = require('zlib');
 
 interface BuildContextProps {
     build: Build;
@@ -27,6 +30,7 @@ const CreateBuild = () => {
     const { auth } = useContext(AuthContext);
 
     const [build, editBuild] = useState<Build>(buildDefaultBuild());
+    const [generatedURL, setGeneratedURL] = useState('');
     const gameVers = useCurrentGameVersion();
 
     useEffect(() => {
@@ -46,8 +50,34 @@ const CreateBuild = () => {
         history.push(`/builds/${newBuild.buildId}`);
     };
 
+    const generateURLBuild = () => {
+        if (!build.playerClass.className) {
+            toast.error('You need to select a class');
+        } else {
+            const buildString = Buffer.from(
+                JSON.stringify(
+                    produce(build, (draft) => {
+                        draft.buildId = -1;
+                    }),
+                ),
+                'utf-8',
+            );
+            const encoded = zlib.gzipSync(buildString);
+            setGeneratedURL(`${window.location.origin}/builds/${base64url(encoded)}`);
+        }
+    };
+
     return (
-        <BuildContext.Provider value={{ build, editBuild, editMode: true }}>
+        <BuildContext.Provider
+            value={{
+                build,
+                editBuild: (b) => {
+                    console.log('Edit called');
+                    editBuild(b);
+                },
+                editMode: true,
+            }}
+        >
             {!auth && (
                 <div className="m-3 p-3 bg-primary rounded-3 d-flex align-items-center">
                     <Figure.Image src="./assets/error.png" width={30} className="mx-3 my-0" />
@@ -74,9 +104,18 @@ const CreateBuild = () => {
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
+                {generatedURL && (
+                    <FormGroup>
+                        <Form.Label>Build generated at: </Form.Label>
+                        <Form.Control readOnly value={generatedURL} onFocus={(e) => e.target.select()} />
+                    </FormGroup>
+                )}
                 <CenterDiv>
                     <Button variant="success" onClick={createBuild} disabled={!auth}>
                         Publish!
+                    </Button>
+                    <Button variant="success" onClick={generateURLBuild}>
+                        Generate URL without saving!
                     </Button>
                 </CenterDiv>
             </Container>

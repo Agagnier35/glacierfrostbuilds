@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Figure } from 'react-bootstrap';
-import Talents from '../../api/model/talents';
+import { Talents } from '../../api/model/talents';
 import { BuildContext } from '../../pages/create-build';
 import { OneTalentContainer, TalentPointCounter } from './style';
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Card, Container, Row } from 'react-bootstrap';
-import Talents from '../../api/model/talents';
+import { Talents } from '../../api/model/talents';
 import { BuildContext } from '../../pages/create-build';
 import ActiveTalentEditor from '../active-talent-editor';
 import TalentSelector from '../talent-selector';

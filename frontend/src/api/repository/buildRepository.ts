@@ -1,7 +1,7 @@
 import { SearchFormType } from '../../pages/search-build';
 import apiGateway from '../apiGateway';
-import Build from '../model/build';
-import BuildList from '../model/build-list';
+import { Build } from '../model/build';
+import { BuildList } from '../model/build-list';
 
 class BuildRepositoryAPI {
     search = (searchForm: SearchFormType) =>

@@ -7,11 +7,20 @@ const About = () => {
             <Card>
                 <Card.Header>About</Card.Header>
                 <Card.Body>
-                    <p>
-                        GlacierFrost2's Builds is open-source and you can find the code{' '}
-                        <a href="https://github.com/Agagnier35/glacierfrostbuilds">here</a>
-                    </p>
-                    <br />
+                    <Container fluid>
+                        <p className="mb-0">
+                            GlacierFrost2's Builds is open-source and you can find the code{' '}
+                            <a href="https://github.com/Agagnier35/glacierfrostbuilds">here</a>
+                        </p>
+                        <br />
+                        <div className="mb-2 p-0">
+                            I made this tool because we had an excel sheet, which got deprecated for the
+                            idleoncompanion.
+                            <br />
+                            <br />
+                            Then idleoncompanion hasn't updated been in a while, making their builds deprecated
+                        </div>
+                    </Container>
                     <Container fluid>
                         <h3>About me:</h3>
                         <Row className="mb-3">

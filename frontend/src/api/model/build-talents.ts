@@ -1,4 +1,4 @@
-export default interface BuildTalents {
+export interface BuildTalents {
     talentId: number;
     points: number;
     comments?: string;

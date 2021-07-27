@@ -1,7 +1,7 @@
 import produce from 'immer';
 import React, { ChangeEvent, useContext } from 'react';
 import { Col, Container, Figure, Form, Row } from 'react-bootstrap';
-import Talents from '../../api/model/talents';
+import { Talents } from '../../api/model/talents';
 import { BuildContext } from '../../pages/create-build';
 import NumberPicker from '../number-picker';
 import { OneTalentContainer } from '../talent-selector/style';

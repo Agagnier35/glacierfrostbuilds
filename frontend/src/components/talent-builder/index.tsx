@@ -11,7 +11,7 @@ const TalentBuilder = () => {
     const { playerClass } = build;
 
     useEffect(() => {
-        if (playerClass?.talents?.length === 0) {
+        if (playerClass?.talents?.length === 0 && playerClass?.className) {
             PlayerClassRepository.getClassWithName(playerClass.className).then((pc) =>
                 editBuild(
                     produce(build, (draft) => {

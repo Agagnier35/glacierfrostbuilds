@@ -1,3 +1,4 @@
+import base64url from 'base64url';
 import produce from 'immer';
 import React, { useContext, useEffect, useState } from 'react';
 import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
@@ -11,11 +12,14 @@ import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
 import TalentBuilder from '../../components/talent-builder';
 import { AuthContext } from '../../utils/authProvider';
+import { BuildChecker } from '../../utils/build-checker';
 import { BuildContext } from '../create-build';
 import { UpdateBuildButtonGroup } from './style';
+const zlib = require('zlib');
 
 const ViewBuild = () => {
     const { buildId } = useParams<{ buildId: string }>();
+    const saved = !isNaN(parseInt(buildId));
 
     const { auth } = useContext(AuthContext);
 
@@ -23,15 +27,28 @@ const ViewBuild = () => {
     const [gameVersion, setGameVersion] = useState<string>();
 
     useEffect(() => {
-        BuildRepository.getOneBuild(buildId)
-            .then(setBuild)
-            .catch((e) => {
-                if (e.response.status === 404) {
-                    toast.error('Build does not exist');
-                }
-            });
-        GameRepository.getCurrentGameVersion().then(setGameVersion);
-    }, [buildId]);
+        if (saved) {
+            BuildRepository.getOneBuild(buildId)
+                .then(setBuild)
+                .catch((e) => {
+                    if (e.response.status === 404) {
+                        toast.error('Build does not exist');
+                    }
+                });
+            GameRepository.getCurrentGameVersion().then(setGameVersion);
+        } else {
+            const base64decoded = base64url.toBuffer(buildId);
+            const decoded = zlib.gunzipSync(base64decoded);
+            const parsed = JSON.parse(decoded.toString());
+            const errors = BuildChecker.strictValidate(parsed);
+            if (errors == null) {
+                setBuild(parsed);
+            } else {
+                console.log(errors);
+                toast.error('Unknown Build state');
+            }
+        }
+    }, [buildId, saved]);
 
     const upvote = (b: number) => {
         VoteRepository.upvote(b).then(() =>
@@ -84,15 +101,17 @@ const ViewBuild = () => {
             ) : (
                 <>
                     <Row>
-                        <Col xs={2} sm={1} className="mx-3 d-flex justify-content-center align-items-center">
-                            <NumberPicker
-                                value={build.upvotes}
-                                canEditValue={false}
-                                status={build.userVote}
-                                increment={() => upvote(build.buildId ?? 0)}
-                                decrement={() => downvote(build.buildId ?? 0)}
-                            />
-                        </Col>
+                        {saved && (
+                            <Col xs={2} sm={1} className="mx-3 d-flex justify-content-center align-items-center">
+                                <NumberPicker
+                                    value={build.upvotes}
+                                    canEditValue={false}
+                                    status={build.userVote}
+                                    increment={() => upvote(build.buildId ?? 0)}
+                                    decrement={() => downvote(build.buildId ?? 0)}
+                                />
+                            </Col>
+                        )}
                         <Figure.Image
                             src={`./assets/classes/${build.playerClass.className}.png`}
                             style={{ maxWidth: '250px', maxHeight: '250px', objectFit: 'contain' }}
@@ -101,9 +120,11 @@ const ViewBuild = () => {
                             <Row as="h1" className="mb-0 px-3">
                                 {build.buildName}
                             </Row>
-                            <Row as="h5" className="mb-3 px-3">
-                                By: {build.author}
-                            </Row>
+                            {saved && (
+                                <Row as="h5" className="mb-3 px-3">
+                                    By: {build.author}
+                                </Row>
+                            )}
                             <Row as="p" className="px-3">
                                 {build.description}
                             </Row>

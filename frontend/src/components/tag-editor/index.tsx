@@ -2,7 +2,7 @@ import chroma from 'chroma-js';
 import produce from 'immer';
 import React, { useContext, useEffect, useState } from 'react';
 import Select, { OptionsType } from 'react-select';
-import Tags from '../../api/model/tags';
+import { Tags } from '../../api/model/tags';
 import TagsRepository from '../../api/repository/tagsRepository';
 import { BuildContext } from '../../pages/create-build';
 import getColorForTag from './tag-color';

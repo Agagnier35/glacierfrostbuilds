@@ -1,9 +1,9 @@
-import BuildTalents from './build-talents';
-import PlayerClass from './player-class';
-import Tags from './tags';
+import { BuildTalents } from './build-talents';
+import { PlayerClass } from './player-class';
+import { Tags } from './tags';
 
 export type VoteType = 'UPVOTE' | 'DOWNVOTE';
-export default interface Build {
+export interface Build {
     buildId?: number;
     buildName: string;
     description: string;

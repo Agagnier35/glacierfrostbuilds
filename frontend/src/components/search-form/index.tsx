@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button, ButtonGroup, ButtonToolbar, Col, Figure, FloatingLabel, Form, Row } from 'react-bootstrap';
-import Tags from '../../api/model/tags';
+import { Tags } from '../../api/model/tags';
 import GameRepository from '../../api/repository/gameRepository';
 import PlayerClassRepository from '../../api/repository/playerClassRepository';
 import TagsRepository from '../../api/repository/tagsRepository';

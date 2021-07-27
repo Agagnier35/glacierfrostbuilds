@@ -1,4 +1,4 @@
-import Tags from '../../api/model/tags';
+import { Tags } from '../../api/model/tags';
 
 const getColorForTag = (t: Tags) => {
     switch (t.category) {

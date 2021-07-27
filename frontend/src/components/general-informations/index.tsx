@@ -1,7 +1,7 @@
 import produce, { Draft } from 'immer';
 import React, { useContext } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import Build from '../../api/model/build';
+import { Build } from '../../api/model/build';
 import { BuildContext } from '../../pages/create-build';
 import TagEditor from '../tag-editor';
 
