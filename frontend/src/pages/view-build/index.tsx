@@ -166,7 +166,7 @@ const ViewBuild = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <BuildContext.Provider value={{ build, editBuild: () => {}, editMode: false }}>
+                        <BuildContext.Provider value={{ build, editBuild: setBuild, editMode: false }}>
                             <TalentBuilder />
                         </BuildContext.Provider>
                     </Row>

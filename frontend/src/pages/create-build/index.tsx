@@ -58,6 +58,7 @@ const CreateBuild = () => {
                 JSON.stringify(
                     produce(build, (draft) => {
                         draft.buildId = -1;
+                        draft.playerClass.talents = [];
                     }),
                 ),
                 'utf-8',

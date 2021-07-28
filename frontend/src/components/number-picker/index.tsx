@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
+import Repeatable from 'react-repeatable';
 import { VoteType } from '../../api/model/build';
 
 interface NumberPickerProps {
@@ -10,6 +11,7 @@ interface NumberPickerProps {
     increment?: () => void;
     decrement?: () => void;
     renderButtons?: boolean;
+    canHold?: boolean;
 }
 
 const NumberPicker = ({
@@ -20,6 +22,7 @@ const NumberPicker = ({
     renderButtons = true,
     increment = () => onChange(value + 1),
     decrement = () => onChange(value - 1),
+    canHold = false,
 }: NumberPickerProps) => {
     const handleChangeNumberOnly = (e: ChangeEvent<HTMLInputElement>) => {
         const number =
@@ -49,15 +52,21 @@ const NumberPicker = ({
             style={{ minWidth: '50px', maxHeight: '100px' }}
         >
             {renderButtons && (
-                <Button
-                    variant={getButtonColorClassName(true)}
-                    onClick={(e) => {
+                <Repeatable
+                    repeatDelay={300}
+                    repeatInterval={50}
+                    tag={Button}
+                    onPress={(e: any) => e.preventDefault()}
+                    onClick={(e: any) => {
                         e.stopPropagation();
                         increment();
                     }}
+                    onHold={() => canHold && increment()}
+                    onRelease={(e: any) => e.preventDefault()}
+                    variant={getButtonColorClassName(true)}
                 >
                     &#9650;
-                </Button>
+                </Repeatable>
             )}
             {canEditValue ? (
                 <Form.Control
@@ -72,15 +81,21 @@ const NumberPicker = ({
                 <h4 className={'text-' + getButtonColorClassName(status === 'UPVOTE')}>{value}</h4>
             )}
             {renderButtons && (
-                <Button
-                    variant={getButtonColorClassName()}
-                    onClick={(e) => {
+                <Repeatable
+                    repeatDelay={300}
+                    repeatInterval={50}
+                    tag={Button}
+                    onPress={(e: any) => e.preventDefault()}
+                    onClick={(e: any) => {
                         e.stopPropagation();
                         decrement();
                     }}
+                    onHold={() => canHold && decrement()}
+                    onRelease={(e: any) => e.preventDefault()}
+                    variant={getButtonColorClassName(false)}
                 >
                     &#9660;
-                </Button>
+                </Repeatable>
             )}
         </ButtonGroup>
     );

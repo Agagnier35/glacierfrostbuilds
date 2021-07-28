@@ -11,7 +11,7 @@ const TalentBuilder = () => {
     const { playerClass } = build;
 
     useEffect(() => {
-        if (playerClass?.talents?.length === 0 && playerClass?.className) {
+        if (playerClass.talents.length === 0 && playerClass.className) {
             PlayerClassRepository.getClassWithName(playerClass.className).then((pc) =>
                 editBuild(
                     produce(build, (draft) => {
@@ -21,7 +21,7 @@ const TalentBuilder = () => {
             );
         }
         /* eslint-disable */
-    }, [playerClass?.className, editBuild]);
+    }, [playerClass.className]);
     /* eslint-enable */
 
     if (playerClass?.talents?.length > 0) {
