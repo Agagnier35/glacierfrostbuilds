@@ -1,6 +1,7 @@
 import 'bootswatch/dist/slate/bootstrap.min.css';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,32 +19,34 @@ const App = () => {
     return (
         <Router>
             <ToastContainer position="bottom-right" autoClose={5000} pauseOnFocusLoss pauseOnHover />
-            <AuthProvider>
-                <Topbar />
+            <GoogleReCaptchaProvider reCaptchaKey="6LdJpMsbAAAAAJrK8zVDbQnjqOkImKwbaSHmrHE5">
+                <AuthProvider>
+                    <Topbar />
 
-                <ErrorBoundary>
-                    <Switch>
-                        <Route path="/" exact>
-                            <Home />
-                        </Route>
-                        <Route exact path="/builds">
-                            <SearchBuild />
-                        </Route>
-                        <Route path="/builds/:buildId">
-                            <ViewBuild />
-                        </Route>
-                        <Route path="/create">
-                            <CreateBuild />
-                        </Route>
-                        <Route path="/about">
-                            <About />
-                        </Route>
-                        <Route path="/error">
-                            <ErrorFallback error={{ stack: 'Backend Auth Failure' }} />
-                        </Route>
-                    </Switch>
-                </ErrorBoundary>
-            </AuthProvider>
+                    <ErrorBoundary>
+                        <Switch>
+                            <Route path="/" exact>
+                                <Home />
+                            </Route>
+                            <Route exact path="/builds">
+                                <SearchBuild />
+                            </Route>
+                            <Route path="/builds/:buildId">
+                                <ViewBuild />
+                            </Route>
+                            <Route path="/create">
+                                <CreateBuild />
+                            </Route>
+                            <Route path="/about">
+                                <About />
+                            </Route>
+                            <Route path="/error">
+                                <ErrorFallback error={{ stack: 'Backend Auth Failure' }} />
+                            </Route>
+                        </Switch>
+                    </ErrorBoundary>
+                </AuthProvider>
+            </GoogleReCaptchaProvider>
         </Router>
     );
 };

@@ -1,7 +1,8 @@
 import base64url from 'base64url';
 import produce from 'immer';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buildDefaultBuild } from '../../api/model/build';
@@ -18,6 +19,8 @@ import { UpdateBuildButtonGroup } from './style';
 const zlib = require('zlib');
 
 const ViewBuild = () => {
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
     const { buildId } = useParams<{ buildId: string }>();
     const saved = !isNaN(parseInt(buildId));
 
@@ -50,49 +53,65 @@ const ViewBuild = () => {
         }
     }, [buildId, saved]);
 
-    const upvote = (b: number) => {
-        VoteRepository.upvote(b).then(() =>
-            setBuild(
-                produce(build, (draft) => {
-                    switch (draft.userVote) {
-                        case 'DOWNVOTE':
-                            draft.upvotes += 2;
-                            break;
-                        case 'UPVOTE':
-                            draft.upvotes -= 1;
-                            draft.userVote = undefined;
-                            return;
-                        default:
-                            draft.upvotes += 1;
-                            break;
-                    }
-                    draft.userVote = 'UPVOTE';
-                }),
-            ),
-        );
-    };
+    const upvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('upvote_build');
 
-    const downvote = (b: number) => {
-        VoteRepository.downvote(b).then(() =>
-            setBuild(
-                produce(build, (draft) => {
-                    switch (draft.userVote) {
-                        case 'DOWNVOTE':
-                            draft.upvotes += 1;
-                            draft.userVote = undefined;
-                            return;
-                        case 'UPVOTE':
-                            draft.upvotes -= 2;
-                            break;
-                        default:
-                            draft.upvotes -= 1;
-                            break;
-                    }
-                    draft.userVote = 'DOWNVOTE';
-                }),
-            ),
-        );
-    };
+            if (token) {
+                await VoteRepository.upvote(b, token, build.userVote);
+                setBuild(
+                    produce(build, (draft) => {
+                        switch (draft.userVote) {
+                            case 'DOWNVOTE':
+                                draft.upvotes += 2;
+                                break;
+                            case 'UPVOTE':
+                                draft.upvotes -= 1;
+                                draft.userVote = undefined;
+                                return;
+                            default:
+                                draft.upvotes += 1;
+                                break;
+                        }
+                        draft.userVote = 'UPVOTE';
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [build, executeRecaptcha],
+    );
+
+    const downvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('downvote_build');
+
+            if (token) {
+                await VoteRepository.downvote(b, token, build.userVote);
+                setBuild(
+                    produce(build, (draft) => {
+                        switch (draft.userVote) {
+                            case 'DOWNVOTE':
+                                draft.upvotes += 1;
+                                draft.userVote = undefined;
+                                return;
+                            case 'UPVOTE':
+                                draft.upvotes -= 2;
+                                break;
+                            default:
+                                draft.upvotes -= 1;
+                                break;
+                        }
+                        draft.userVote = 'DOWNVOTE';
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [build, executeRecaptcha],
+    );
 
     return (
         <div className="p-2 m-3 bg-primary rounded-3">

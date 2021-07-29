@@ -18,10 +18,10 @@ export interface Build {
     userVote?: VoteType;
 }
 
-export const buildDefaultBuild = (): Build => ({
+export const buildDefaultBuild = (author?: string): Build => ({
     buildName: '',
     description: '',
-    author: '',
+    author: author ?? '<anonymous>',
     upvotes: 0,
     gameVersion: '',
     talents: [],

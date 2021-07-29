@@ -2,20 +2,19 @@ package com.idleon.glacierfrostbuilds.api.controller
 
 import com.idleon.glacierfrostbuilds.api.dto.BuildDto
 import com.idleon.glacierfrostbuilds.api.dto.BuildListDto
+import com.idleon.glacierfrostbuilds.api.validator.RecaptchaValidator
 import com.idleon.glacierfrostbuilds.api.validator.ValidatorFactory
 import com.idleon.glacierfrostbuilds.domain.mapper.BuildMapper
-import com.idleon.glacierfrostbuilds.domain.model.*
+import com.idleon.glacierfrostbuilds.domain.model.Build
+import com.idleon.glacierfrostbuilds.domain.model.PlayerClass
+import com.idleon.glacierfrostbuilds.domain.model.Tags
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
-import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
-import com.idleon.glacierfrostbuilds.utils.getNameFromPrincipal
 import com.idleon.glacierfrostbuilds.utils.UnpagedSort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.*
 import javax.persistence.criteria.Predicate
 
@@ -23,9 +22,9 @@ import javax.persistence.criteria.Predicate
 @RequestMapping("/api/v1/builds")
 class BuildsController @Autowired constructor(
     val repo: BuildRepository,
-    val voteRepo: BuildVotesRepository,
     val mapper: BuildMapper,
-    val validatorFactory: ValidatorFactory
+    val validatorFactory: ValidatorFactory,
+    val recaptchaValidator: RecaptchaValidator
 ) {
     @GetMapping()
     fun getBuilds(
@@ -38,7 +37,6 @@ class BuildsController @Autowired constructor(
         @RequestParam className: String?,
         @RequestParam tags: String?,
         @RequestParam gameVersion: String?,
-        @AuthenticationPrincipal principal: OAuth2User?
     ): ResponseEntity<BuildListDto> {
         val sort = Sort.by(sortDirection ?: Sort.Direction.DESC, validateSort(sortBy))
         val page = if (pageNumber != null && pageSize != null)
@@ -73,7 +71,7 @@ class BuildsController @Autowired constructor(
 
         return ResponseEntity.ok(
             BuildListDto(
-                mapper.toDto(buildResults.content, false, getNameFromPrincipal(principal)),
+                mapper.toDto(buildResults.content, false),
                 buildResults.totalElements,
                 buildResults.totalPages
             )
@@ -88,27 +86,26 @@ class BuildsController @Autowired constructor(
 
     @GetMapping("/{id}")
     fun getBuildsWithId(
-        @PathVariable id: String,
-        @AuthenticationPrincipal principal: OAuth2User?
+        @PathVariable id: String
     ): ResponseEntity<BuildDto> {
         val build = repo.findByIdOrNull(id.toInt())
-        return build?.let { ResponseEntity.ok(mapper.toDto(it, true, getNameFromPrincipal(principal)))  } ?: ResponseEntity.notFound()
+        return build?.let { ResponseEntity.ok(mapper.toDto(it, true)) } ?: ResponseEntity.notFound()
             .build();
     }
 
     @PostMapping()
     fun createBuilds(
         @RequestBody buildDto: BuildDto,
-        @AuthenticationPrincipal principal: OAuth2User
+        @RequestParam recaptcha: String?
     ): ResponseEntity<BuildDto> {
+        recaptchaValidator.validateReCaptcha(recaptcha)
         validatorFactory.createValidator(buildDto)?.validate()
 
-        val userName = getNameFromPrincipal(principal)!!
-        val build = mapper.fromDto(buildDto, userName)
+
+        val build = mapper.fromDto(buildDto)
         build.upvotes = 1
         val savedBuild = repo.save(build)
-        voteRepo.save(BuildVotes(build = savedBuild, userName = userName, voteType = VoteType.UPVOTE))
-        return ResponseEntity.ok(mapper.toDto(savedBuild, false, userName))
+        return ResponseEntity.ok(mapper.toDto(savedBuild, false))
     }
 
     private fun validateSort(sortBy: String?): String {
