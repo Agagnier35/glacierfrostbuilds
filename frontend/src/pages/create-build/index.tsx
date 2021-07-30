@@ -9,6 +9,7 @@ import { Build, buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
 import ClassSelector from '../../components/class-selector';
 import GeneralInformation from '../../components/general-informations';
+import SortableContainer from '../../components/sortable-items';
 import TalentBuilder from '../../components/talent-builder';
 import useCurrentGameVersion from '../../hooks/useCurrentGameVersion';
 import { AuthContext } from '../../utils/authProvider';
@@ -113,6 +114,12 @@ const CreateBuild = () => {
                         <Accordion.Body>
                             <ClassSelector />
                             <TalentBuilder />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header>Cards</Accordion.Header>
+                        <Accordion.Body>
+                            <SortableContainer />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

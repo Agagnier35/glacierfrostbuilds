@@ -6,15 +6,16 @@ CREATE TABLE Card(
     PRIMARY KEY (Card_Id)
 );
 
-CREATE TABLE Card_category()
+CREATE TABLE Card_category(
     Card_category   VARCHAR(50)     NOT NULL,
     Set_effect      VARCHAR(1024)   NOT NULL
-PRIMARY KEY (Card_category)
+    PRIMARY KEY (Card_category)
 );
 
 CREATE TABLE Build_Cards(
     Build_Id        INTEGER     NOT NULL
     Card_Id         INTEGER     NOT NULL,
+    Group_Id        VARCHAR(50)     NOT NULL,
     Card_Order      INTEGER     NOT NULL,
     PRIMARY KEY (Build_Id, Card_Id)
 );
