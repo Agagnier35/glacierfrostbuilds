@@ -27,7 +27,7 @@ const ViewBuild = () => {
     const { auth } = useContext(AuthContext);
 
     const [build, setBuild] = useState(buildDefaultBuild());
-    const [gameVersion, setGameVersion] = useState<string>();
+    const [gameVersion, setGameVersion] = useState<string>('');
 
     useEffect(() => {
         if (saved) {
@@ -113,6 +113,26 @@ const ViewBuild = () => {
         [build, executeRecaptcha],
     );
 
+    const bumpVersion = useCallback(async () => {
+        const token = await executeRecaptcha?.('bump_build');
+        if (token) {
+            const nb = await BuildRepository.bumpBuildVersion(build, token);
+            setBuild(nb);
+        } else {
+            toast.error('reCAPTCHA Failed');
+        }
+    }, [build, executeRecaptcha]);
+
+    const deprecate = useCallback(async () => {
+        const token = await executeRecaptcha?.('deprecate_build');
+        if (token) {
+            const nb = await BuildRepository.deprecateBuild(build, token);
+            setBuild(nb);
+        } else {
+            toast.error('reCAPTCHA Failed');
+        }
+    }, [build, executeRecaptcha]);
+
     return (
         <div className="p-2 m-3 bg-primary rounded-3">
             {!build.buildId ? (
@@ -136,7 +156,11 @@ const ViewBuild = () => {
                             style={{ maxWidth: '250px', maxHeight: '250px', objectFit: 'contain' }}
                         />
                         <Col className="px-3">
-                            <Row as="h1" className="mb-0 px-3">
+                            <Row
+                                as="h1"
+                                className="mb-0 px-3"
+                                style={{ textDecoration: build.deprecated ? 'line-through' : '' }}
+                            >
                                 {build.buildName}
                             </Row>
                             {saved && (
@@ -150,13 +174,18 @@ const ViewBuild = () => {
                         </Col>
                         <Col xs={12} md={3} lg={4}>
                             <Row as="h5" className="mb-3 px-3">
-                                <Col className="px-0">Game Version: {build.gameVersion}</Col>
-                                {auth?.user === build.author && build.gameVersion !== gameVersion && (
+                                <Col className="px-0">
+                                    Game Version:{' '}
+                                    <span className={build.gameVersion !== gameVersion ? 'text-danger' : ''}>
+                                        {build.gameVersion}
+                                    </span>
+                                </Col>
+                                {auth?.user === build.author && build.gameVersion !== gameVersion && !build.deprecated && (
                                     <UpdateBuildButtonGroup className="px-0" size="sm">
-                                        <Col as={Button} variant="success" onClick={() => alert('TODO')}>
+                                        <Col as={Button} variant="success" onClick={bumpVersion}>
                                             Update build to current version
                                         </Col>
-                                        <Col as={Button} variant="danger" onClick={() => alert('TODO')}>
+                                        <Col as={Button} variant="danger" onClick={deprecate}>
                                             Mark as deprecated
                                         </Col>
                                     </UpdateBuildButtonGroup>

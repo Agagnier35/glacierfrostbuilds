@@ -12,6 +12,7 @@ data class BuildDto(
     val gameVersion: String = CURRENT_GAME_VERSION,
     val minLevel: Int?,
     val maxLevel: Int?,
+    val deprecated: Boolean,
     val talents: List<BuildTalentsDto> = arrayListOf(),
     val playerClass: PlayerClassDto = PlayerClassDto(),
     val tags: List<TagsDto> = arrayListOf(),

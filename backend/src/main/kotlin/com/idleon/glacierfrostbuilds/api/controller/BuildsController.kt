@@ -9,6 +9,7 @@ import com.idleon.glacierfrostbuilds.domain.model.Build
 import com.idleon.glacierfrostbuilds.domain.model.PlayerClass
 import com.idleon.glacierfrostbuilds.domain.model.Tags
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
+import com.idleon.glacierfrostbuilds.utils.Constants
 import com.idleon.glacierfrostbuilds.utils.UnpagedSort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
@@ -106,6 +107,37 @@ class BuildsController @Autowired constructor(
         build.upvotes = 1
         val savedBuild = repo.save(build)
         return ResponseEntity.ok(mapper.toDto(savedBuild, false))
+    }
+
+    @PostMapping("/{id}/deprecate")
+    fun deprecateBuildsWithId(
+        @PathVariable id: String,
+        @RequestParam recaptcha: String?
+    ): ResponseEntity<BuildDto> {
+        recaptchaValidator.validateReCaptcha(recaptcha)
+        val build = repo.findByIdOrNull(id.toInt())
+
+        return build?.let {
+            build.deprecated = true
+            repo.save(build)
+            ResponseEntity.ok(mapper.toDto(it, true))
+        } ?: ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/{id}/bump-version")
+    fun bumpBuildVersion(
+        @PathVariable id: String,
+        @RequestParam recaptcha: String?
+    ): ResponseEntity<BuildDto> {
+        recaptchaValidator.validateReCaptcha(recaptcha)
+        val build = repo.findByIdOrNull(id.toInt())
+
+        return build?.let {
+            build.gameVersion = Constants.CURRENT_GAME_VERSION;
+            build.deprecated = false;
+            repo.save(build)
+            ResponseEntity.ok(mapper.toDto(it, true))
+        } ?: ResponseEntity.notFound().build();
     }
 
     private fun validateSort(sortBy: String?): String {

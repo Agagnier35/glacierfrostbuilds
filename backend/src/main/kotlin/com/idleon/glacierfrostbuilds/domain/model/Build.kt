@@ -1,5 +1,6 @@
 package com.idleon.glacierfrostbuilds.domain.model
 
+import org.hibernate.annotations.ColumnDefault
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -31,6 +32,10 @@ data class Build(
 
     @Column(name = "Max_Level")
     var maxLevel: Int = 0,
+
+    @Column(name = "deprecated")
+    @ColumnDefault("false")
+    var deprecated: Boolean? = false,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
     var talents: List<BuildTalents> = arrayListOf(),

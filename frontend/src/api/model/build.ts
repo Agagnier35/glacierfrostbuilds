@@ -12,6 +12,7 @@ export interface Build {
     gameVersion: string;
     minLevel?: number;
     maxLevel?: number;
+    deprecated: boolean;
     talents: BuildTalents[];
     playerClass: PlayerClass;
     tags: Tags[];
@@ -25,6 +26,7 @@ export const buildDefaultBuild = (author?: string): Build => ({
     upvotes: 0,
     gameVersion: '',
     talents: [],
+    deprecated: false,
     playerClass: {
         className: '',
         talents: [],

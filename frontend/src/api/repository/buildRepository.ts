@@ -18,7 +18,12 @@ class BuildRepositoryAPI {
         );
     getOneBuild = (buildId: string) => apiGateway.get<void, Build>(`/builds/${buildId}`);
     getBuildCount = () => apiGateway.get<void, number>(`/builds/count`);
+
     postBuild = (b: Build, token: string) => apiGateway.post<Build, Build>(`/builds?recaptcha=${token}`, b);
+    deprecateBuild = (build: Build, token: string) =>
+        apiGateway.post<void, Build>(`/builds/${build.buildId}/deprecate?recaptcha=${token}`);
+    bumpBuildVersion = (build: Build, token: string) =>
+        apiGateway.post<void, Build>(`/builds/${build.buildId}/bump-version?recaptcha=${token}`);
 }
 
 const BuildRepository = new BuildRepositoryAPI();
