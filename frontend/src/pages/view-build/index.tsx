@@ -6,9 +6,11 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buildDefaultBuild } from '../../api/model/build';
+import { BuildCardGroups } from '../../api/model/build-cards';
 import BuildRepository from '../../api/repository/buildRepository';
 import GameRepository from '../../api/repository/gameRepository';
 import VoteRepository from '../../api/repository/voteRepository';
+import { BuildCardContainer, CardItem, GroupLabel } from '../../components/card-editor/style';
 import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
 import TalentBuilder from '../../components/talent-builder';
@@ -217,6 +219,40 @@ const ViewBuild = () => {
                         <BuildContext.Provider value={{ build, editBuild: setBuild, editMode: false }}>
                             <TalentBuilder />
                         </BuildContext.Provider>
+                    </Row>
+                    <Row className="m-3">
+                        <Col>
+                            <Figure.Image
+                                width={56}
+                                height={72}
+                                src={`./assets/cards/${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                alt={`${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                style={{ objectFit: 'contain', margin: 0 }}
+                            />
+                        </Col>
+                        <Col xs={11}>
+                            <Row as="b">{build.cardSet?.cardCategory}</Row>
+                            <Row>{build.cardSet?.setEffect}</Row>
+                        </Col>
+                    </Row>
+                    <Row style={{ padding: '0 1rem' }}>
+                        {BuildCardGroups.map((g) => (
+                            <BuildCardContainer isDragging={false}>
+                                <GroupLabel>{g}</GroupLabel>
+                                {build.cards
+                                    .filter((c) => c.group === g)
+                                    .map((c) => (
+                                        <CardItem isDragging={false}>
+                                            <Figure.Image
+                                                width={56}
+                                                height={72}
+                                                src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
+                                                alt={c.card?.name}
+                                            />
+                                        </CardItem>
+                                    ))}
+                            </BuildCardContainer>
+                        ))}
                     </Row>
                 </>
             )}

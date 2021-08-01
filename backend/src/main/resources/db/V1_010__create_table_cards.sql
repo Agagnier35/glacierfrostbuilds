@@ -9,6 +9,7 @@ CREATE TABLE Card(
 CREATE TABLE Card_category(
     Card_category   VARCHAR(50)     NOT NULL,
     Set_effect      VARCHAR(1024)   NOT NULL,
+    Category_order  INTEGER         NOT NULL,
     PRIMARY KEY (Card_category)
 );
 
@@ -20,7 +21,9 @@ CREATE TABLE Build_Cards(
     PRIMARY KEY (Build_Id, Card_Id)
 );
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Blunder Hills', '+(8/16/24/32)XP% if Below lvl 50');
+ALTER TABLE Build ADD Card_Set VARCHAR(50);
+
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Blunder Hills', '+(8/16/24/32)XP% if Below lvl 50', 0);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Green Mushroom', '+(12/24/36/48) Base HP', 'Blunder Hills'),
 ('Red Mushroom', '+(3/6/9/12) Base LUK', 'Blunder Hills'),
@@ -29,7 +32,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Slime', '+(2/4/9/8) Base WIS', 'Blunder Hills'),
 ('Baby Boa', '+(1/2/3/4) Move Spd', 'Blunder Hills'),
 ('Carrotman', '+(2/4/6/8) Base AGI', 'Blunder Hills'),
-('Glublinm', '+(2/4/6/8)% Total HP', 'Blunder Hills'),
+('Glublin', '+(2/4/6/8)% Total HP', 'Blunder Hills'),
 ('Wode Board', '+(2/4/6/8) Base STR', 'Blunder Hills'),
 ('Gigafrog', '+%(5/10/15/20) Card Drop Chance', 'Blunder Hills'),
 ('Poop', '+(10/20/30/40)% Crystal Mob Spawn Chance', 'Blunder Hills'),
@@ -39,7 +42,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Crystal Carrot', '+(5/10/15/20)% Total Drop Rate', 'Blunder Hills'),
 ('Wood Mushroom', '+(5/10/15/20)% Total Accuracy', 'Blunder Hills');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Yum-Yum Desert', '+(10/20/30/40)% Food Effect');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Yum-Yum Desert', '+(10/20/30/40)% Food Effect', 1);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Sandy Pot', '+(12/24/36/48)% EXP Conversion from Talent', 'Yum-Yum Desert'),
 ('Mimic', '+(3/6/9/12)% Total Drop Rate', 'Yum-Yum Desert'),
@@ -56,7 +59,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Crystal Crabal', '+(2/4/6/8)% EXP from monsters', 'Yum-Yum Desert'),
 ('Bandit Bob', '+(1/2/3/4)% Money from Monsters', 'Yum-Yum Desert');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Frostbite Tundra', '+(5/10/15)% DEF and ACC');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Frostbite Tundra', '+(5/10/15)% DEF and ACC', 2);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Sheepie', '+(3/6/9/12)% Defence from Equipment', 'Frostbite Tundra'),
 ('Frost Flake', '+(7/14/21/28) Base STR', 'Frostbite Tundra'),
@@ -74,7 +77,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Bloodbone', '+(3/6/9/12)+% Total Damage', 'Frostbite Tundra'),
 ('Crystal Cattle', '+(3/6/9/12)% EXP from monsters', 'Frostbite Tundra');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Easy Resources', '+(8/16/24/32)% Skill Efficiency');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Easy Resources', '+(8/16/24/32)% Skill Efficiency', 3);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Copper Ore', '+(4/8/12/16) Base accuracy', 'Easy Resources'),
 ('Iron Ore', '+(5/10/15/20)% Total Mining Efficiency', 'Easy Resources'),
@@ -90,7 +93,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Fly', '+(4/8/12/16)% Monster EXP While Active', 'Easy Resources'),
 ('Butterfly', '+(5/10/15/20)% Total Catching Efficiency', 'Easy Resources');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Medium Resources', '+(5/10/15/20)% Skill EXP Gain');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Medium Resources', '+(5/10/15/20)% Skill EXP Gain', 4);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Platinum Ore', '+(2/4/6/8)% Mining Away Gains', 'Medium Resources'),
 ('Dementia Ore', '+(4/8/12/16)% Mining Speed', 'Medium Resources'),
@@ -108,12 +111,12 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Crabbo', '+(5/10/15/20)% Trapping Efficiency', 'Medium Resources'),
 ('Scorpie', '+(5/10/15/20)% Trapping EXP', 'Medium Resources');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Hard Resources', '+(4/8/12/16) Skill AFK Gain Rate');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Hard Resources', '+(4/8/12/16) Skill AFK Gain Rate', 5);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Lustre Ore', '+(4/8/12/16) Base LUK', 'Hard Resources'),
 ('Rooted Soul', '+(6/12/18/24) Starting Pts in Worship', 'Hard Resources'),
 ('Frigid Soul', '+(7/14/21/28)% Max Charge', 'Hard Resources'),
-('Squiddy Soule', '+(5/10/15/20)% Charge Rate', 'Hard Resources'),
+('Squiddy Soul', '+(5/10/15/20)% Charge Rate', 'Hard Resources'),
 ('Mousey', '+(2.5/5/7.5/10)% Shiny Critter Chance', 'Hard Resources'),
 ('Owlio', '+(1.25/2.5/3.75/5)% EXP from monsters', 'Hard Resources'),
 ('Pingy', '+(6/12/18/24)% Shiny Critter Chance', 'Hard Resources'),
@@ -123,7 +126,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Mosquisnow', '+(7/14/21/28)% Total Catching Efficiency', 'Hard Resources'),
 ('Flycicle', '+(2.5/5/7.5/10)% Catching Away Gains', 'Hard Resources');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Bosses and Nightmares', '+(6/12/18/24)% Dmg, Drop, and EXP');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Bosses and Nightmares', '+(6/12/18/24)% Dmg, Drop, and EXP', 6);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Baba Yaga', '+(10/20/30/40)% Money from Monsters', 'Bosses and Nightmares'),
 ('Dr Defecaus', '+(5/10/15/20)% Total Damage', 'Bosses and Nightmares'),
@@ -137,7 +140,7 @@ INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Chizoar', '+(8/16/24/32)% Cog Build Spd (Passive)', 'Bosses and Nightmares'),
 ('Chaotic Chizoar', '+(5/10/15/20)% Shrine Effects', 'Bosses and Nightmares');
 
-INSERT INTO Card_category(Card_category, Set_effect) VALUES ('Events', '+(5/10/15/20)% Drop Rate');
+INSERT INTO Card_category(Card_category, Set_effect, Category_order) VALUES ('Events', '+(5/10/15/20)% Drop Rate', 99);
 INSERT INTO Card (Card_Name, Card_Effect, Card_category) VALUES
 ('Ghost', '+(3/6/9/12)% Monster EXP While Active', 'Events'),
 ('Giftmas Blobulyte', '(3/6/9/12)+% Total Drop Rate', 'Events'),

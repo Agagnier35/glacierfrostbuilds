@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.request.WebRequest
+import java.time.LocalDateTime
 
 @ControllerAdvice
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -19,7 +20,17 @@ class ErrorHandlerController {
     fun handleException(ex: Exception, request: WebRequest): ResponseEntity<RestError> {
         val error = if (ex is RestException) ex.error
         else {
-            RestError(HttpStatus.INTERNAL_SERVER_ERROR, listOf(RestIssue(ex.javaClass.name, ex.message ?: "")))
+            RestError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                listOf(
+                    RestIssue(
+                        ex.javaClass.name,
+                        "The dev fucked up badly, contact him and send this timestamp: ${
+                            LocalDateTime.now().toString()
+                        }" ?: ""
+                    )
+                )
+            )
         }
         logger.error(ex) { "Exception" }
 

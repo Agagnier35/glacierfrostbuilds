@@ -13,8 +13,11 @@ data class BuildDto(
     val minLevel: Int?,
     val maxLevel: Int?,
     val deprecated: Boolean,
+    val cardSet: CardCategoryDto? = null,
     val talents: List<BuildTalentsDto> = arrayListOf(),
     val playerClass: PlayerClassDto = PlayerClassDto(),
+    val cards: List<BuildCardsDto> = arrayListOf(),
+    val bubbles: List<BuildBubblesDto> = arrayListOf(),
     val tags: List<TagsDto> = arrayListOf(),
     val timestampCreation: LocalDateTime = LocalDateTime.now()
 )

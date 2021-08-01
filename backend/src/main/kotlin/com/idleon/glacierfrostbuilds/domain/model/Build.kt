@@ -40,9 +40,19 @@ data class Build(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
     var talents: List<BuildTalents> = arrayListOf(),
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
+    var cards: List<BuildCards> = arrayListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
+    var bubbles: List<BuildBubbles> = arrayListOf(),
+
     @ManyToOne
     @JoinColumn(name = "Class_Name")
     var playerClass: PlayerClass = PlayerClass(),
+
+    @ManyToOne
+    @JoinColumn(name = "Card_Set", referencedColumnName = "Card_category")
+    var cardSet: CardCategory? = null,
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(

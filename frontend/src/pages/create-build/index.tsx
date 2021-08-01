@@ -7,9 +7,10 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Build, buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
+import CardEditor from '../../components/card-editor';
+import CardSetSelector from '../../components/card-set-selector';
 import ClassSelector from '../../components/class-selector';
 import GeneralInformation from '../../components/general-informations';
-import SortableContainer from '../../components/sortable-items';
 import TalentBuilder from '../../components/talent-builder';
 import useCurrentGameVersion from '../../hooks/useCurrentGameVersion';
 import { AuthContext } from '../../utils/authProvider';
@@ -119,7 +120,8 @@ const CreateBuild = () => {
                     <Accordion.Item eventKey="2">
                         <Accordion.Header>Cards</Accordion.Header>
                         <Accordion.Body>
-                            <SortableContainer />
+                            <CardSetSelector />
+                            <CardEditor />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
