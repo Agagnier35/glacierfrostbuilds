@@ -1,46 +1,37 @@
 package com.idleon.glacierfrostbuilds.api.controller
 
-import com.idleon.glacierfrostbuilds.api.exceptions.RestIssueFactory
-import com.idleon.glacierfrostbuilds.domain.model.BuildVotes
-import com.idleon.glacierfrostbuilds.domain.model.VoteType
+import com.idleon.glacierfrostbuilds.api.validator.RecaptchaValidator
 import com.idleon.glacierfrostbuilds.domain.repositories.BuildRepository
-import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
-import com.idleon.glacierfrostbuilds.utils.getNameFromPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.core.user.OAuth2User
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+
+enum class VoteType {
+    UPVOTE, DOWNVOTE
+}
 
 @RestController
 @RequestMapping("/api/v1/builds")
 class VoteController @Autowired constructor(
     val buildRepo: BuildRepository,
-    val voteRepo: BuildVotesRepository,
-    val issueFactory: RestIssueFactory
+    val recaptchaValidator: RecaptchaValidator
 ) {
 
     @PostMapping("/{buildId}/upvote")
     fun upvoteBuild(
         @PathVariable buildId: String,
-        @AuthenticationPrincipal principal: OAuth2User
+        @RequestParam previousVote: VoteType?,
+        @RequestParam recaptcha: String?
     ): ResponseEntity<Unit> {
+        recaptchaValidator.validateReCaptcha(recaptcha)
+
         val build = buildRepo.findByIdOrNull(buildId.toInt()) ?: return ResponseEntity.notFound().build()
 
-        val userName = getNameFromPrincipal(principal)!!
-        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), userName)
-        if (previousVote?.voteType === VoteType.UPVOTE) {
+        if (previousVote === VoteType.UPVOTE) {
             build.upvotes -= 1
-            voteRepo.delete(previousVote)
         } else {
-            val updatedVote = previousVote ?: BuildVotes(build = build, userName = userName)
-            build.upvotes += if (previousVote?.voteType === VoteType.DOWNVOTE) 2 else 1;
-            updatedVote.voteType = VoteType.UPVOTE
-            voteRepo.save(updatedVote)
+            build.upvotes += if (previousVote === VoteType.DOWNVOTE) 2 else 1;
         }
 
         buildRepo.save(build)
@@ -50,21 +41,17 @@ class VoteController @Autowired constructor(
     @PostMapping("/{buildId}/downvote")
     fun downvoteBuild(
         @PathVariable buildId: String,
-        @AuthenticationPrincipal principal: OAuth2User
+        @RequestParam previousVote: VoteType?,
+        @RequestParam recaptcha: String?
     ): ResponseEntity<Unit> {
+        recaptchaValidator.validateReCaptcha(recaptcha)
+
         val build = buildRepo.findByIdOrNull(buildId.toInt()) ?: return ResponseEntity.notFound().build()
 
-        val userName = getNameFromPrincipal(principal)!!
-        val previousVote = voteRepo.getVoteForBuildAndUser(buildId.toInt(), userName)
-        if (previousVote?.voteType === VoteType.DOWNVOTE) {
+        if (previousVote === VoteType.DOWNVOTE) {
             build.upvotes += 1
-            voteRepo.delete(previousVote)
         } else {
-            val updatedVote =
-                previousVote ?: BuildVotes(build = build, userName = userName, voteType = VoteType.DOWNVOTE)
-            build.upvotes -= if (previousVote?.voteType === VoteType.UPVOTE) 2 else 1;
-            updatedVote.voteType = VoteType.DOWNVOTE
-            voteRepo.save(updatedVote)
+            build.upvotes -= if (previousVote === VoteType.UPVOTE) 2 else 1;
         }
 
         buildRepo.save(build)

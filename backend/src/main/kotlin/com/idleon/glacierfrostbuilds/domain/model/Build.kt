@@ -1,5 +1,6 @@
 package com.idleon.glacierfrostbuilds.domain.model
 
+import org.hibernate.annotations.ColumnDefault
 import java.io.Serializable
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -32,12 +33,26 @@ data class Build(
     @Column(name = "Max_Level")
     var maxLevel: Int = 0,
 
+    @Column(name = "deprecated")
+    @ColumnDefault("false")
+    var deprecated: Boolean? = false,
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
     var talents: List<BuildTalents> = arrayListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
+    var cards: List<BuildCards> = arrayListOf(),
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "build", cascade = [CascadeType.ALL])
+    var bubbles: List<BuildBubbles> = arrayListOf(),
 
     @ManyToOne
     @JoinColumn(name = "Class_Name")
     var playerClass: PlayerClass = PlayerClass(),
+
+    @ManyToOne
+    @JoinColumn(name = "Card_Set", referencedColumnName = "Card_category")
+    var cardSet: CardCategory? = null,
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinTable(

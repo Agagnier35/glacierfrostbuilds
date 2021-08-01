@@ -1,11 +1,15 @@
 import base64url from 'base64url';
 import produce from 'immer';
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Accordion, Button, Container, Figure, Form, FormGroup } from 'react-bootstrap';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { Accordion, Button, Container, Form, FormGroup } from 'react-bootstrap';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Build, buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
+import BubbleEditor from '../../components/bubble-editor';
+import CardEditor from '../../components/card-editor';
+import CardSetSelector from '../../components/card-set-selector';
 import ClassSelector from '../../components/class-selector';
 import GeneralInformation from '../../components/general-informations';
 import TalentBuilder from '../../components/talent-builder';
@@ -25,13 +29,18 @@ export const BuildContext = createContext<BuildContextProps>({
     editMode: false,
 });
 
-const CreateBuild = () => {
+const CreateBuild = ({ initialBuild }: { initialBuild: Build }) => {
+    const { executeRecaptcha } = useGoogleReCaptcha();
     const history = useHistory();
     const { auth } = useContext(AuthContext);
 
-    const [build, editBuild] = useState<Build>(buildDefaultBuild());
+    const [build, editBuild] = useState<Build>(initialBuild);
     const [generatedURL, setGeneratedURL] = useState('');
     const gameVers = useCurrentGameVersion();
+
+    useEffect(() => {
+        editBuild(initialBuild);
+    }, [initialBuild]);
 
     useEffect(() => {
         if (!build.gameVersion) {
@@ -45,10 +54,28 @@ const CreateBuild = () => {
     }, [gameVers, build.gameVersion]);
     /* eslint-enable */
 
-    const createBuild = async () => {
-        const newBuild = await BuildRepository.postBuild(build);
-        history.push(`/builds/${newBuild.buildId}`);
-    };
+    useEffect(() => {
+        if (auth?.user) {
+            editBuild(
+                produce(build, (draft) => {
+                    draft.author = auth.user!;
+                }),
+            );
+        }
+        /* eslint-disable */
+    }, [auth]);
+    /* eslint-enable */
+
+    const createBuild = useCallback(async () => {
+        const token = await executeRecaptcha?.('create_build');
+
+        if (token) {
+            const newBuild = await BuildRepository.postBuild(build, token);
+            history.push(`/builds/${newBuild.buildId}`);
+        } else {
+            toast.error('reCAPTCHA Failed');
+        }
+    }, [build, executeRecaptcha, history]);
 
     const generateURLBuild = () => {
         if (!build.playerClass.className) {
@@ -79,15 +106,6 @@ const CreateBuild = () => {
                 editMode: true,
             }}
         >
-            {!auth && (
-                <div className="m-3 p-3 bg-primary rounded-3 d-flex align-items-center">
-                    <Figure.Image src="./assets/error.png" width={30} className="mx-3 my-0" />
-                    <p className="text-danger m-0">
-                        You are not logged in, you won't be able to publish your build! Use the login button in the top
-                        right corner.
-                    </p>
-                </div>
-            )}
             <Container fluid>
                 <Accordion defaultActiveKey="0" className="mb-3">
                     <Accordion.Item eventKey="0">
@@ -104,6 +122,19 @@ const CreateBuild = () => {
                             <TalentBuilder />
                         </Accordion.Body>
                     </Accordion.Item>
+                    <Accordion.Item eventKey="2">
+                        <Accordion.Header>Cards</Accordion.Header>
+                        <Accordion.Body>
+                            <CardSetSelector />
+                            <CardEditor />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header>Alchemy Bubbles</Accordion.Header>
+                        <Accordion.Body>
+                            <BubbleEditor />
+                        </Accordion.Body>
+                    </Accordion.Item>
                 </Accordion>
                 {generatedURL && (
                     <FormGroup>
@@ -112,11 +143,11 @@ const CreateBuild = () => {
                     </FormGroup>
                 )}
                 <CenterDiv>
-                    <Button variant="success" onClick={createBuild} disabled={!auth}>
+                    <Button variant="success" onClick={createBuild}>
                         Publish!
                     </Button>
                     <Button variant="success" onClick={generateURLBuild}>
-                        Generate URL without saving!
+                        Share URL without saving
                     </Button>
                 </CenterDiv>
             </Container>

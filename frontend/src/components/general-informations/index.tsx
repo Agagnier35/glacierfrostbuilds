@@ -12,7 +12,7 @@ const GeneralInformation = () => {
 
     return (
         <Form>
-            <Row className="mb-3">
+            <Row className="mb-1">
                 <Form.Group as={Col} lg={5}>
                     <Form.Label htmlFor="BuildName">Build Name:</Form.Label>
                     <Form.Control
@@ -38,6 +38,22 @@ const GeneralInformation = () => {
                         onChange={(e) =>
                             changeBuild((draft) => {
                                 draft.gameVersion = e.target.value;
+                            })
+                        }
+                    />
+                </Form.Group>
+            </Row>
+            <Row className="mb-3">
+                <Form.Group as={Col} lg={5}>
+                    <Form.Label htmlFor="Author">Author Name:</Form.Label>
+                    <Form.Control
+                        id="Author"
+                        size="sm"
+                        placeholder="Author name..."
+                        value={build.author}
+                        onChange={(e) =>
+                            changeBuild((draft) => {
+                                draft.author = e.target.value;
                             })
                         }
                     />

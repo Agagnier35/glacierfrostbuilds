@@ -4,7 +4,6 @@ import com.idleon.glacierfrostbuilds.config.oath.RestOAuth2AccessTokenResponseCl
 import com.idleon.glacierfrostbuilds.config.oath.RestOAuth2UserService
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -24,11 +23,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .cors().and().csrf().disable()
             .authorizeRequests { a ->
                 a
-                    .antMatchers(HttpMethod.POST, "/api/**").authenticated()
-                    .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
-                    .antMatchers(HttpMethod.PATCH, "/api/**").authenticated()
-                    .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
-                    .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+//                    .antMatchers(HttpMethod.POST, "/api/**").authenticated()
+//                    .antMatchers(HttpMethod.PUT, "/api/**").authenticated()
+//                    .antMatchers(HttpMethod.PATCH, "/api/**").authenticated()
+//                    .antMatchers(HttpMethod.DELETE, "/api/**").authenticated()
+//                    .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                     .anyRequest().permitAll()
             }
             .exceptionHandling { e ->

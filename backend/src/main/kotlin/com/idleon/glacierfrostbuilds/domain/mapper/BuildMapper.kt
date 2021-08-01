@@ -5,7 +5,7 @@ import com.idleon.glacierfrostbuilds.api.exceptions.RestError
 import com.idleon.glacierfrostbuilds.api.exceptions.RestException
 import com.idleon.glacierfrostbuilds.api.exceptions.RestIssueFactory
 import com.idleon.glacierfrostbuilds.domain.model.Build
-import com.idleon.glacierfrostbuilds.domain.repositories.BuildVotesRepository
+import com.idleon.glacierfrostbuilds.domain.repositories.CardCategoryRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.PlayerClassRepository
 import com.idleon.glacierfrostbuilds.domain.repositories.TagsRepository
 import com.idleon.glacierfrostbuilds.utils.ConstantesMessages.MSG_INVALID
@@ -31,10 +31,19 @@ abstract class BuildMapper {
     protected lateinit var playerClassMapper: PlayerClassMapper
 
     @Autowired
+    protected lateinit var cardCategoryMapper: CardCategoryMapper
+
+    @Autowired
     protected lateinit var tagsMapper: TagsMapper
 
     @Autowired
     protected lateinit var buildTalentsMapper: BuildTalentsMapper
+
+    @Autowired
+    protected lateinit var buildCardsMapper: BuildCardsMapper
+
+    @Autowired
+    protected lateinit var buildBubblesMapper: BuildBubbleMapper
 
     @Autowired
     protected lateinit var tagsRepository: TagsRepository
@@ -43,7 +52,7 @@ abstract class BuildMapper {
     protected lateinit var playerClassRepository: PlayerClassRepository
 
     @Autowired
-    protected lateinit var voteRepository: BuildVotesRepository
+    protected lateinit var cardCategoryRepository: CardCategoryRepository
 
 
     @Mappings(
@@ -52,32 +61,31 @@ abstract class BuildMapper {
             target = "playerClass",
             expression = "java(withTalents ? playerClassMapper.toDto(source.getPlayerClass()): playerClassMapper.toDtoNoTalents(source.getPlayerClass()))"
         ),
+        Mapping(target = "cardSet", expression = "java(cardCategoryMapper.toDto(source.getCardSet()))"),
         Mapping(target = "talents", expression = "java(buildTalentsMapper.toDto(source.getTalents()))"),
-        Mapping(
-            target = "userVote",
-            expression = "java(voteRepository.getVoteForBuildAndUser(source.getBuildId(), userRequestName) != null ? voteRepository.getVoteForBuildAndUser(source.getBuildId(), userRequestName).getVoteType() : null)"
-        )
+        Mapping(target = "cards", expression = "java(buildCardsMapper.toDto(source.getCards()))"),
+        Mapping(target = "bubbles", expression = "java(buildBubblesMapper.toDto(source.getBubbles()))")
     )
     abstract fun toDto(
         source: Build,
         @Context withTalents: Boolean = false,
-        @Context userRequestName: String?
     ): BuildDto
 
     abstract fun toDto(
         source: List<Build>,
-        @Context withTalents: Boolean = false,
-        @Context userRequestName: String?
+        @Context withTalents: Boolean = false
     ): List<BuildDto>
 
 
     @Mappings(
-        Mapping(target = "author", expression = "java(authorName)"),
         Mapping(target = "playerClass", ignore = true),
+        Mapping(target = "cardSet", ignore = true),
         Mapping(target = "tags", ignore = true),
         Mapping(target = "talents", ignore = true),
+        Mapping(target = "cards", ignore = true),
+        Mapping(target = "bubbles", ignore = true),
     )
-    abstract fun fromDto(source: BuildDto, @Context authorName: String): Build
+    abstract fun fromDto(source: BuildDto): Build
 
     @AfterMapping
     fun afterFromDto(source: BuildDto, @MappingTarget target: Build?): Build? {
@@ -85,12 +93,19 @@ abstract class BuildMapper {
             target.playerClass =
                 playerClassRepository.findByIdOrNull(source.playerClass.className)
                     ?: throw createRestError("playerClass")
+            target.cardSet = source.cardSet?.let {
+                cardCategoryRepository.findByIdOrNull(it.cardCategory)
+                    ?: throw createRestError("cardSet")
+            }
+
 
             target.tags = source.tags.map {
                 tagsRepository.findByIdOrNull(it.tagId) ?: throw createRestError("tags ${it.tagId}")
 
             }
             target.talents = buildTalentsMapper.fromDto(source.talents, target)
+            target.cards = buildCardsMapper.fromDto(source.cards, target)
+            target.bubbles = buildBubblesMapper.fromDto(source.bubbles, target)
         }
         return target
     }
@@ -103,6 +118,6 @@ abstract class BuildMapper {
         )
     }
 
-    abstract fun fromDto(source: List<BuildDto>, @Context authorName: String): List<Build>
+    abstract fun fromDto(source: List<BuildDto>): List<Build>
 }
 

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { BuildList } from '../../api/model/build-list';
 import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
+import useCurrentGameVersion from '../../hooks/useCurrentGameVersion';
 import { CenterDiv } from '../create-build/style';
 import { SearchFormType } from '../search-build';
 import { TagContainer } from './style';
@@ -26,6 +27,9 @@ const SearchResultBuilds = ({
     upvote,
 }: SearchResultBuildsProps) => {
     const history = useHistory();
+
+    const gameVersion = useCurrentGameVersion();
+
     const navigateToPage = (page: number) => {
         const pageForm = { ...searchForm, pageNumber: page };
         setSearchForm(pageForm);
@@ -62,15 +66,34 @@ const SearchResultBuilds = ({
                             src={`./assets/classes/${b.playerClass.className}.png`}
                             style={{ maxWidth: '90px', maxHeight: '90px', objectFit: 'contain' }}
                         />
-                        <Col className="px-2" xs={12} sm={5}>
-                            <Row as="h1" className="mb-0 px-3">
+                        <Col className="px-2" xs={12} sm={4}>
+                            <Row
+                                as="h1"
+                                className="mb-0 px-3"
+                                style={{ textDecoration: b.deprecated ? 'line-through' : '' }}
+                            >
                                 {b.buildName}
                             </Row>
                             <Row as="h5" className="mb-3 px-3">
                                 By: {b.author}
                             </Row>
                         </Col>
-                        <Col xs={12} md={4}>
+                        <Col
+                            className="px-2"
+                            xs={12}
+                            sm={3}
+                            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+                        >
+                            <h6 className="mb-1">
+                                Game Version:{' '}
+                                <span className={b.gameVersion !== gameVersion ? 'text-danger' : ''}>
+                                    {b.gameVersion}
+                                </span>
+                            </h6>
+                            <h6 className="mb-1">Recommended Min Level: {b.minLevel}</h6>
+                            <h6 className="mb-1">Recommended Max Level: {b.maxLevel}</h6>
+                        </Col>
+                        <Col xs={12} md={3}>
                             <TagContainer fluid className="flex-wrap">
                                 {b.tags.map((t) => (
                                     <Badge

@@ -1,13 +1,17 @@
 import base64url from 'base64url';
 import produce from 'immer';
-import React, { useContext, useEffect, useState } from 'react';
-import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Badge, Button, Col, Figure, OverlayTrigger, Popover, Row, Spinner } from 'react-bootstrap';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buildDefaultBuild } from '../../api/model/build';
+import { BuildCardGroups } from '../../api/model/build-cards';
 import BuildRepository from '../../api/repository/buildRepository';
 import GameRepository from '../../api/repository/gameRepository';
 import VoteRepository from '../../api/repository/voteRepository';
+import { BubbleItem, BuildBubbleContainer } from '../../components/bubble-editor/style';
+import { BuildCardContainer, CardItem, GroupLabel } from '../../components/card-editor/style';
 import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
 import TalentBuilder from '../../components/talent-builder';
@@ -18,13 +22,16 @@ import { UpdateBuildButtonGroup } from './style';
 const zlib = require('zlib');
 
 const ViewBuild = () => {
+    const history = useHistory();
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
     const { buildId } = useParams<{ buildId: string }>();
     const saved = !isNaN(parseInt(buildId));
 
     const { auth } = useContext(AuthContext);
 
     const [build, setBuild] = useState(buildDefaultBuild());
-    const [gameVersion, setGameVersion] = useState<string>();
+    const [gameVersion, setGameVersion] = useState<string>('');
 
     useEffect(() => {
         if (saved) {
@@ -50,49 +57,85 @@ const ViewBuild = () => {
         }
     }, [buildId, saved]);
 
-    const upvote = (b: number) => {
-        VoteRepository.upvote(b).then(() =>
-            setBuild(
-                produce(build, (draft) => {
-                    switch (draft.userVote) {
-                        case 'DOWNVOTE':
-                            draft.upvotes += 2;
-                            break;
-                        case 'UPVOTE':
-                            draft.upvotes -= 1;
-                            draft.userVote = undefined;
-                            return;
-                        default:
-                            draft.upvotes += 1;
-                            break;
-                    }
-                    draft.userVote = 'UPVOTE';
-                }),
-            ),
-        );
-    };
+    const upvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('upvote_build');
 
-    const downvote = (b: number) => {
-        VoteRepository.downvote(b).then(() =>
-            setBuild(
-                produce(build, (draft) => {
-                    switch (draft.userVote) {
-                        case 'DOWNVOTE':
-                            draft.upvotes += 1;
-                            draft.userVote = undefined;
-                            return;
-                        case 'UPVOTE':
-                            draft.upvotes -= 2;
-                            break;
-                        default:
-                            draft.upvotes -= 1;
-                            break;
-                    }
-                    draft.userVote = 'DOWNVOTE';
-                }),
-            ),
-        );
-    };
+            if (token) {
+                await VoteRepository.upvote(b, token, build.userVote);
+                setBuild(
+                    produce(build, (draft) => {
+                        switch (draft.userVote) {
+                            case 'DOWNVOTE':
+                                draft.upvotes += 2;
+                                break;
+                            case 'UPVOTE':
+                                draft.upvotes -= 1;
+                                draft.userVote = undefined;
+                                return;
+                            default:
+                                draft.upvotes += 1;
+                                break;
+                        }
+                        draft.userVote = 'UPVOTE';
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [build, executeRecaptcha],
+    );
+
+    const downvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('downvote_build');
+
+            if (token) {
+                await VoteRepository.downvote(b, token, build.userVote);
+                setBuild(
+                    produce(build, (draft) => {
+                        switch (draft.userVote) {
+                            case 'DOWNVOTE':
+                                draft.upvotes += 1;
+                                draft.userVote = undefined;
+                                return;
+                            case 'UPVOTE':
+                                draft.upvotes -= 2;
+                                break;
+                            default:
+                                draft.upvotes -= 1;
+                                break;
+                        }
+                        draft.userVote = 'DOWNVOTE';
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [build, executeRecaptcha],
+    );
+
+    const bumpVersion = useCallback(async () => {
+        const token = await executeRecaptcha?.('bump_build');
+        if (token) {
+            const nb = await BuildRepository.bumpBuildVersion(build, token);
+            setBuild(nb);
+        } else {
+            toast.error('reCAPTCHA Failed');
+        }
+    }, [build, executeRecaptcha]);
+
+    const deprecate = useCallback(async () => {
+        const token = await executeRecaptcha?.('deprecate_build');
+        if (token) {
+            const nb = await BuildRepository.deprecateBuild(build, token);
+            setBuild(nb);
+        } else {
+            toast.error('reCAPTCHA Failed');
+        }
+    }, [build, executeRecaptcha]);
 
     return (
         <div className="p-2 m-3 bg-primary rounded-3">
@@ -117,7 +160,11 @@ const ViewBuild = () => {
                             style={{ maxWidth: '250px', maxHeight: '250px', objectFit: 'contain' }}
                         />
                         <Col className="px-3">
-                            <Row as="h1" className="mb-0 px-3">
+                            <Row
+                                as="h1"
+                                className="mb-0 px-3"
+                                style={{ textDecoration: build.deprecated ? 'line-through' : '' }}
+                            >
                                 {build.buildName}
                             </Row>
                             {saved && (
@@ -128,16 +175,35 @@ const ViewBuild = () => {
                             <Row as="p" className="px-3">
                                 {build.description}
                             </Row>
+
+                            {auth?.user === build.author && (
+                                <Row className="d-flex justify-content-center">
+                                    <Button
+                                        variant="dark"
+                                        size="sm"
+                                        className="mb-3 px-3"
+                                        style={{ maxWidth: '10rem' }}
+                                        onClick={() => history.push(`/builds/edit/${build.buildId}`)}
+                                    >
+                                        Edit Build
+                                    </Button>
+                                </Row>
+                            )}
                         </Col>
                         <Col xs={12} md={3} lg={4}>
                             <Row as="h5" className="mb-3 px-3">
-                                <Col className="px-0">Game Version: {build.gameVersion}</Col>
-                                {auth?.user === build.author && build.gameVersion !== gameVersion && (
+                                <Col className="px-0">
+                                    Game Version:{' '}
+                                    <span className={build.gameVersion !== gameVersion ? 'text-danger' : ''}>
+                                        {build.gameVersion}
+                                    </span>
+                                </Col>
+                                {auth?.user === build.author && build.gameVersion !== gameVersion && !build.deprecated && (
                                     <UpdateBuildButtonGroup className="px-0" size="sm">
-                                        <Col as={Button} variant="success" onClick={() => alert('TODO')}>
+                                        <Col as={Button} variant="success" onClick={bumpVersion}>
                                             Update build to current version
                                         </Col>
-                                        <Col as={Button} variant="danger" onClick={() => alert('TODO')}>
+                                        <Col as={Button} variant="danger" onClick={deprecate}>
                                             Mark as deprecated
                                         </Col>
                                     </UpdateBuildButtonGroup>
@@ -149,6 +215,7 @@ const ViewBuild = () => {
                             <Row as="h5" className="mb-3 px-3">
                                 Recommended Max Level: {build.maxLevel}
                             </Row>
+
                             <Row className="mb-3 px-3">
                                 {build.tags.map((t) => (
                                     <Col
@@ -169,6 +236,84 @@ const ViewBuild = () => {
                         <BuildContext.Provider value={{ build, editBuild: setBuild, editMode: false }}>
                             <TalentBuilder />
                         </BuildContext.Provider>
+                    </Row>
+                    {build.cardSet && (
+                        <Row className="m-3">
+                            <Col>
+                                <Figure.Image
+                                    width={56}
+                                    height={72}
+                                    src={`./assets/cards/${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                    alt={`${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                    style={{ objectFit: 'contain', margin: 0 }}
+                                />
+                            </Col>
+                            <Col xs={11}>
+                                <Row as="b">{build.cardSet?.cardCategory}</Row>
+                                <Row>{build.cardSet?.setEffect}</Row>
+                            </Col>
+                        </Row>
+                    )}
+                    <Row style={{ padding: '0 1rem' }}>
+                        {BuildCardGroups.map((g) => (
+                            <BuildCardContainer isDragging={false}>
+                                <GroupLabel>{g}</GroupLabel>
+                                {build.cards
+                                    .filter((c) => c.group === g)
+                                    .map((c) => (
+                                        <OverlayTrigger
+                                            key={`triger-${c.cardId}`}
+                                            placement="top"
+                                            overlay={
+                                                <Popover id={`tooltip-${c.cardId}`}>
+                                                    <Popover.Header>{c.card?.name}</Popover.Header>
+                                                    <Popover.Body>{c.card?.effect}</Popover.Body>
+                                                </Popover>
+                                            }
+                                        >
+                                            <CardItem isDragging={false}>
+                                                <Figure.Image
+                                                    width={56}
+                                                    height={72}
+                                                    src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
+                                                    alt={c.card?.name}
+                                                />
+                                            </CardItem>
+                                        </OverlayTrigger>
+                                    ))}
+                            </BuildCardContainer>
+                        ))}
+                    </Row>
+                    <Row style={{ padding: '0 1rem' }}>
+                        {BuildCardGroups.map((g) => (
+                            <BuildBubbleContainer isDragging={false}>
+                                <GroupLabel>{g}</GroupLabel>
+                                {build.bubbles
+                                    .filter((b) => b.group === g)
+                                    .map((b) => (
+                                        <OverlayTrigger
+                                            key={`triger-${b.bubbleId}`}
+                                            placement="top"
+                                            overlay={
+                                                <Popover id={`tooltip-${b.bubbleId}`}>
+                                                    <Popover.Header>{b.bubble?.name}</Popover.Header>
+                                                    <Popover.Body>{b.bubble?.effect}</Popover.Body>
+                                                </Popover>
+                                            }
+                                        >
+                                            <BubbleItem isDragging={false}>
+                                                <Figure.Image
+                                                    width={56}
+                                                    height={56}
+                                                    src={`./assets/alchemy/${b.bubble?.category}${b.bubble?.bubbleNumber}.png`}
+                                                    alt={b.bubble?.name}
+                                                />
+                                                <p>{b.points}</p>
+                                            </BubbleItem>
+                                        </OverlayTrigger>
+                                    ))}
+                            </BuildBubbleContainer>
+                        ))}
                     </Row>
                 </>
             )}

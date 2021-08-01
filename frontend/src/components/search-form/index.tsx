@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Button, ButtonGroup, ButtonToolbar, Col, Figure, FloatingLabel, Form, Row } from 'react-bootstrap';
 import { Tags } from '../../api/model/tags';
-import GameRepository from '../../api/repository/gameRepository';
 import PlayerClassRepository from '../../api/repository/playerClassRepository';
 import TagsRepository from '../../api/repository/tagsRepository';
 import getColorForTag from '../../components/tag-editor/tag-color';
@@ -19,7 +18,7 @@ const SearchForm = ({ searchForm, setSearchForm, search }: SearchFormProps) => {
     const [classes, setClasses] = useState<string[]>([]);
 
     useEffect(() => {
-        GameRepository.getCurrentGameVersion().then((g) => setSearchForm({ ...searchForm, gameVersion: g }));
+        //GameRepository.getCurrentGameVersion().then((g) => setSearchForm({ ...searchForm, gameVersion: g }));
         TagsRepository.getAllTags().then(setTags);
         PlayerClassRepository.getPlayerClassNames().then(setClasses);
         /* eslint-disable */

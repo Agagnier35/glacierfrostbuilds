@@ -1,6 +1,8 @@
 import produce from 'immer';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Accordion, Container } from 'react-bootstrap';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { toast } from 'react-toastify';
 import { BuildList } from '../../api/model/build-list';
 import { Tags } from '../../api/model/tags';
 import BuildRepository from '../../api/repository/buildRepository';
@@ -21,6 +23,8 @@ export interface SearchFormType {
 }
 
 const SearchBuild = () => {
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
     const [activeKey, setActiveKey] = useState(0);
 
     const [buildResults, setBuildResults] = useState<BuildList>({ builds: [], numberOfBuild: 0, numberOfPages: 0 });
@@ -43,55 +47,71 @@ const SearchBuild = () => {
         setActiveKey(1);
     };
 
-    const upvote = (b: number) => {
-        VoteRepository.upvote(b).then(() =>
-            setBuildResults(
-                produce(buildResults, (draft) => {
-                    const votedBuild = draft.builds.find((bu) => bu.buildId === b);
-                    if (votedBuild) {
-                        switch (votedBuild.userVote) {
-                            case 'DOWNVOTE':
-                                votedBuild.upvotes += 2;
-                                break;
-                            case 'UPVOTE':
-                                votedBuild.upvotes -= 1;
-                                votedBuild.userVote = undefined;
-                                return;
-                            default:
-                                votedBuild.upvotes += 1;
-                                break;
-                        }
-                        votedBuild.userVote = 'UPVOTE';
-                    }
-                }),
-            ),
-        );
-    };
+    const upvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('upvote_build');
 
-    const downvote = (b: number) => {
-        VoteRepository.downvote(b).then(() =>
-            setBuildResults(
-                produce(buildResults, (draft) => {
-                    const votedBuild = draft.builds.find((bu) => bu.buildId === b);
-                    if (votedBuild) {
-                        switch (votedBuild.userVote) {
-                            case 'DOWNVOTE':
-                                votedBuild.upvotes += 1;
-                                votedBuild.userVote = undefined;
-                                return;
-                            case 'UPVOTE':
-                                votedBuild.upvotes -= 2;
-                                break;
-                            default:
-                                votedBuild.upvotes -= 1;
-                                break;
+            if (token) {
+                await VoteRepository.upvote(b, token, buildResults.builds.find((bu) => bu.buildId === b)?.userVote);
+                setBuildResults(
+                    produce(buildResults, (draft) => {
+                        const votedBuild = draft.builds.find((bu) => bu.buildId === b);
+                        if (votedBuild) {
+                            switch (votedBuild.userVote) {
+                                case 'DOWNVOTE':
+                                    votedBuild.upvotes += 2;
+                                    break;
+                                case 'UPVOTE':
+                                    votedBuild.upvotes -= 1;
+                                    votedBuild.userVote = undefined;
+                                    return;
+                                default:
+                                    votedBuild.upvotes += 1;
+                                    break;
+                            }
+                            votedBuild.userVote = 'UPVOTE';
                         }
-                        votedBuild.userVote = 'DOWNVOTE';
-                    }
-                }),
-            ),
-        );
-    };
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [buildResults, executeRecaptcha],
+    );
+
+    const downvote = useCallback(
+        async (b: number) => {
+            const token = await executeRecaptcha?.('downvote_build');
+
+            if (token) {
+                await VoteRepository.downvote(b, token, buildResults.builds.find((bu) => bu.buildId === b)?.userVote);
+                setBuildResults(
+                    produce(buildResults, (draft) => {
+                        const votedBuild = draft.builds.find((bu) => bu.buildId === b);
+                        if (votedBuild) {
+                            switch (votedBuild.userVote) {
+                                case 'DOWNVOTE':
+                                    votedBuild.upvotes += 1;
+                                    votedBuild.userVote = undefined;
+                                    return;
+                                case 'UPVOTE':
+                                    votedBuild.upvotes -= 2;
+                                    break;
+                                default:
+                                    votedBuild.upvotes -= 1;
+                                    break;
+                            }
+                            votedBuild.userVote = 'DOWNVOTE';
+                        }
+                    }),
+                );
+            } else {
+                toast.error('reCAPTCHA Failed');
+            }
+        },
+        [buildResults, executeRecaptcha],
+    );
 
     return (
         <Container fluid>

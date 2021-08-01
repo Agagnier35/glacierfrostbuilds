@@ -1,6 +1,5 @@
 package com.idleon.glacierfrostbuilds.api.dto
 
-import com.idleon.glacierfrostbuilds.domain.model.VoteType
 import com.idleon.glacierfrostbuilds.utils.Constants.CURRENT_GAME_VERSION
 import java.time.LocalDateTime
 
@@ -13,9 +12,12 @@ data class BuildDto(
     val gameVersion: String = CURRENT_GAME_VERSION,
     val minLevel: Int?,
     val maxLevel: Int?,
+    val deprecated: Boolean,
+    val cardSet: CardCategoryDto? = null,
     val talents: List<BuildTalentsDto> = arrayListOf(),
     val playerClass: PlayerClassDto = PlayerClassDto(),
+    val cards: List<BuildCardsDto> = arrayListOf(),
+    val bubbles: List<BuildBubblesDto> = arrayListOf(),
     val tags: List<TagsDto> = arrayListOf(),
-    val userVote: VoteType?,
     val timestampCreation: LocalDateTime = LocalDateTime.now()
 )
