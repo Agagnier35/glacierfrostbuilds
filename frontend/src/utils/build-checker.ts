@@ -1,4 +1,5 @@
 import { createCheckers } from 'ts-interface-checker';
+import BubbleValidator from '../api/model/validators/bubble-ti';
 import BuildBubblesValidator from '../api/model/validators/build-bubbles-ti';
 import BuildCardsValidator from '../api/model/validators/build-cards-ti';
 import BuildTalentsValidator from '../api/model/validators/build-talents-ti';
@@ -19,6 +20,7 @@ const { Build } = createCheckers(
     BuildBubblesValidator,
     CardCategoryValidator,
     CardValidator,
+    BubbleValidator,
 );
 
 export { Build as BuildChecker };

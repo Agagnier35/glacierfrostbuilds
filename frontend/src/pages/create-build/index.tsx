@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Build, buildDefaultBuild } from '../../api/model/build';
 import BuildRepository from '../../api/repository/buildRepository';
+import BubbleEditor from '../../components/bubble-editor';
 import CardEditor from '../../components/card-editor';
 import CardSetSelector from '../../components/card-set-selector';
 import ClassSelector from '../../components/class-selector';
@@ -126,6 +127,12 @@ const CreateBuild = ({ initialBuild }: { initialBuild: Build }) => {
                         <Accordion.Body>
                             <CardSetSelector />
                             <CardEditor />
+                        </Accordion.Body>
+                    </Accordion.Item>
+                    <Accordion.Item eventKey="3">
+                        <Accordion.Header>Alchemy Bubbles</Accordion.Header>
+                        <Accordion.Body>
+                            <BubbleEditor />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>

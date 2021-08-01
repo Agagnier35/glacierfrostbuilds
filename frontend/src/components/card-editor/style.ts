@@ -8,6 +8,7 @@ export const BuildCardContainer = styled.div<{ isDragging: boolean }>`
 
     margin: 1px;
     display: flex;
+    align-items: center;
     overflow-x: auto;
 
     min-width: 300px;

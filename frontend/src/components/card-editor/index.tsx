@@ -13,13 +13,8 @@ const CardEditor = () => {
 
     const [cards, setCards] = useState<Card[]>([]);
     useEffect(() => {
-        initCards();
+        CardsRepository.getAllCards().then(setCards);
     }, []);
-
-    const initCards = async () => {
-        const allCards = await CardsRepository.getAllCards();
-        setCards(allCards);
-    };
 
     const onDragEnd = useCallback(
         (result: DropResult) => {

@@ -1,7 +1,7 @@
 import base64url from 'base64url';
 import produce from 'immer';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
+import { Badge, Button, Col, Figure, OverlayTrigger, Popover, Row, Spinner } from 'react-bootstrap';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import { BuildCardGroups } from '../../api/model/build-cards';
 import BuildRepository from '../../api/repository/buildRepository';
 import GameRepository from '../../api/repository/gameRepository';
 import VoteRepository from '../../api/repository/voteRepository';
+import { BubbleItem, BuildBubbleContainer } from '../../components/bubble-editor/style';
 import { BuildCardContainer, CardItem, GroupLabel } from '../../components/card-editor/style';
 import NumberPicker from '../../components/number-picker';
 import getColorForTag from '../../components/tag-editor/tag-color';
@@ -260,16 +261,58 @@ const ViewBuild = () => {
                                 {build.cards
                                     .filter((c) => c.group === g)
                                     .map((c) => (
-                                        <CardItem isDragging={false}>
-                                            <Figure.Image
-                                                width={56}
-                                                height={72}
-                                                src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
-                                                alt={c.card?.name}
-                                            />
-                                        </CardItem>
+                                        <OverlayTrigger
+                                            key={`triger-${c.cardId}`}
+                                            placement="top"
+                                            overlay={
+                                                <Popover id={`tooltip-${c.cardId}`}>
+                                                    <Popover.Header>{c.card?.name}</Popover.Header>
+                                                    <Popover.Body>{c.card?.effect}</Popover.Body>
+                                                </Popover>
+                                            }
+                                        >
+                                            <CardItem isDragging={false}>
+                                                <Figure.Image
+                                                    width={56}
+                                                    height={72}
+                                                    src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
+                                                    alt={c.card?.name}
+                                                />
+                                            </CardItem>
+                                        </OverlayTrigger>
                                     ))}
                             </BuildCardContainer>
+                        ))}
+                    </Row>
+                    <Row style={{ padding: '0 1rem' }}>
+                        {BuildCardGroups.map((g) => (
+                            <BuildBubbleContainer isDragging={false}>
+                                <GroupLabel>{g}</GroupLabel>
+                                {build.bubbles
+                                    .filter((b) => b.group === g)
+                                    .map((b) => (
+                                        <OverlayTrigger
+                                            key={`triger-${b.bubbleId}`}
+                                            placement="top"
+                                            overlay={
+                                                <Popover id={`tooltip-${b.bubbleId}`}>
+                                                    <Popover.Header>{b.bubble?.name}</Popover.Header>
+                                                    <Popover.Body>{b.bubble?.effect}</Popover.Body>
+                                                </Popover>
+                                            }
+                                        >
+                                            <BubbleItem isDragging={false}>
+                                                <Figure.Image
+                                                    width={56}
+                                                    height={56}
+                                                    src={`./assets/alchemy/${b.bubble?.category}${b.bubble?.bubbleNumber}.png`}
+                                                    alt={b.bubble?.name}
+                                                />
+                                                <p>{b.points}</p>
+                                            </BubbleItem>
+                                        </OverlayTrigger>
+                                    ))}
+                            </BuildBubbleContainer>
                         ))}
                     </Row>
                 </>
