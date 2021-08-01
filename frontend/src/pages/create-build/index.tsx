@@ -28,14 +28,18 @@ export const BuildContext = createContext<BuildContextProps>({
     editMode: false,
 });
 
-const CreateBuild = () => {
+const CreateBuild = ({ initialBuild }: { initialBuild: Build }) => {
     const { executeRecaptcha } = useGoogleReCaptcha();
     const history = useHistory();
     const { auth } = useContext(AuthContext);
 
-    const [build, editBuild] = useState<Build>(buildDefaultBuild());
+    const [build, editBuild] = useState<Build>(initialBuild);
     const [generatedURL, setGeneratedURL] = useState('');
     const gameVers = useCurrentGameVersion();
+
+    useEffect(() => {
+        editBuild(initialBuild);
+    }, [initialBuild]);
 
     useEffect(() => {
         if (!build.gameVersion) {

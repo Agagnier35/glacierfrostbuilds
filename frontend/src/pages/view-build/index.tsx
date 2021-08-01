@@ -3,7 +3,7 @@ import produce from 'immer';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Badge, Button, Col, Figure, Row, Spinner } from 'react-bootstrap';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buildDefaultBuild } from '../../api/model/build';
 import { BuildCardGroups } from '../../api/model/build-cards';
@@ -21,6 +21,7 @@ import { UpdateBuildButtonGroup } from './style';
 const zlib = require('zlib');
 
 const ViewBuild = () => {
+    const history = useHistory();
     const { executeRecaptcha } = useGoogleReCaptcha();
 
     const { buildId } = useParams<{ buildId: string }>();
@@ -173,6 +174,20 @@ const ViewBuild = () => {
                             <Row as="p" className="px-3">
                                 {build.description}
                             </Row>
+
+                            {auth?.user === build.author && (
+                                <Row className="d-flex justify-content-center">
+                                    <Button
+                                        variant="dark"
+                                        size="sm"
+                                        className="mb-3 px-3"
+                                        style={{ maxWidth: '10rem' }}
+                                        onClick={() => history.push(`/builds/edit/${build.buildId}`)}
+                                    >
+                                        Edit Build
+                                    </Button>
+                                </Row>
+                            )}
                         </Col>
                         <Col xs={12} md={3} lg={4}>
                             <Row as="h5" className="mb-3 px-3">
@@ -199,6 +214,7 @@ const ViewBuild = () => {
                             <Row as="h5" className="mb-3 px-3">
                                 Recommended Max Level: {build.maxLevel}
                             </Row>
+
                             <Row className="mb-3 px-3">
                                 {build.tags.map((t) => (
                                     <Col
@@ -220,21 +236,23 @@ const ViewBuild = () => {
                             <TalentBuilder />
                         </BuildContext.Provider>
                     </Row>
-                    <Row className="m-3">
-                        <Col>
-                            <Figure.Image
-                                width={56}
-                                height={72}
-                                src={`./assets/cards/${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
-                                alt={`${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
-                                style={{ objectFit: 'contain', margin: 0 }}
-                            />
-                        </Col>
-                        <Col xs={11}>
-                            <Row as="b">{build.cardSet?.cardCategory}</Row>
-                            <Row>{build.cardSet?.setEffect}</Row>
-                        </Col>
-                    </Row>
+                    {build.cardSet && (
+                        <Row className="m-3">
+                            <Col>
+                                <Figure.Image
+                                    width={56}
+                                    height={72}
+                                    src={`./assets/cards/${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                    alt={`${build.cardSet?.cardCategory.replaceAll(' ', '_')}.png`}
+                                    style={{ objectFit: 'contain', margin: 0 }}
+                                />
+                            </Col>
+                            <Col xs={11}>
+                                <Row as="b">{build.cardSet?.cardCategory}</Row>
+                                <Row>{build.cardSet?.setEffect}</Row>
+                            </Col>
+                        </Row>
+                    )}
                     <Row style={{ padding: '0 1rem' }}>
                         {BuildCardGroups.map((g) => (
                             <BuildCardContainer isDragging={false}>
