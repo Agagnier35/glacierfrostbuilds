@@ -19,8 +19,8 @@ import java.time.LocalDateTime
 
 @Component
 class RecaptchaValidator {
-    @Value("\${RECAPTCHA_SECRET}")
-    private lateinit var secret: String;
+    @Value("\${RECAPTCHA_SECRET:''}")
+    private lateinit var secret: String
 
     fun validateReCaptcha(token: String?): Unit {
         if (token == null) {

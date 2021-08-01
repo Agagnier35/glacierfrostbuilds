@@ -255,65 +255,73 @@ const ViewBuild = () => {
                         </Row>
                     )}
                     <Row style={{ padding: '0 1rem' }}>
-                        {BuildCardGroups.map((g) => (
-                            <BuildCardContainer isDragging={false}>
-                                <GroupLabel>{g}</GroupLabel>
-                                {build.cards
-                                    .filter((c) => c.group === g)
-                                    .map((c) => (
-                                        <OverlayTrigger
-                                            key={`triger-${c.cardId}`}
-                                            placement="top"
-                                            overlay={
-                                                <Popover id={`tooltip-${c.cardId}`}>
-                                                    <Popover.Header>{c.card?.name}</Popover.Header>
-                                                    <Popover.Body>{c.card?.effect}</Popover.Body>
-                                                </Popover>
-                                            }
-                                        >
-                                            <CardItem isDragging={false}>
-                                                <Figure.Image
-                                                    width={56}
-                                                    height={72}
-                                                    src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
-                                                    alt={c.card?.name}
-                                                />
-                                            </CardItem>
-                                        </OverlayTrigger>
-                                    ))}
-                            </BuildCardContainer>
-                        ))}
+                        {build.cards.length > 0 ? (
+                            BuildCardGroups.map((g) => (
+                                <BuildCardContainer isDragging={false}>
+                                    <GroupLabel>{g}</GroupLabel>
+                                    {build.cards
+                                        .filter((c) => c.group === g)
+                                        .map((c) => (
+                                            <OverlayTrigger
+                                                key={`triger-${c.cardId}`}
+                                                placement="top"
+                                                overlay={
+                                                    <Popover id={`tooltip-${c.cardId}`}>
+                                                        <Popover.Header>{c.card?.name}</Popover.Header>
+                                                        <Popover.Body>{c.card?.effect}</Popover.Body>
+                                                    </Popover>
+                                                }
+                                            >
+                                                <CardItem isDragging={false}>
+                                                    <Figure.Image
+                                                        width={56}
+                                                        height={72}
+                                                        src={`./assets/cards/${c.card?.name?.replaceAll(' ', '_')}.png`}
+                                                        alt={c.card?.name}
+                                                    />
+                                                </CardItem>
+                                            </OverlayTrigger>
+                                        ))}
+                                </BuildCardContainer>
+                            ))
+                        ) : (
+                            <div>No cards were added in this build</div>
+                        )}
                     </Row>
                     <Row style={{ padding: '0 1rem' }}>
-                        {BuildCardGroups.map((g) => (
-                            <BuildBubbleContainer isDragging={false}>
-                                <GroupLabel>{g}</GroupLabel>
-                                {build.bubbles
-                                    .filter((b) => b.group === g)
-                                    .map((b) => (
-                                        <OverlayTrigger
-                                            key={`triger-${b.bubbleId}`}
-                                            placement="top"
-                                            overlay={
-                                                <Popover id={`tooltip-${b.bubbleId}`}>
-                                                    <Popover.Header>{b.bubble?.name}</Popover.Header>
-                                                    <Popover.Body>{b.bubble?.effect}</Popover.Body>
-                                                </Popover>
-                                            }
-                                        >
-                                            <BubbleItem isDragging={false}>
-                                                <Figure.Image
-                                                    width={56}
-                                                    height={56}
-                                                    src={`./assets/alchemy/${b.bubble?.category}${b.bubble?.bubbleNumber}.png`}
-                                                    alt={b.bubble?.name}
-                                                />
-                                                <p>{b.points}</p>
-                                            </BubbleItem>
-                                        </OverlayTrigger>
-                                    ))}
-                            </BuildBubbleContainer>
-                        ))}
+                        {build.bubbles.length > 0 ? (
+                            BuildCardGroups.map((g) => (
+                                <BuildBubbleContainer isDragging={false}>
+                                    <GroupLabel>{g}</GroupLabel>
+                                    {build.bubbles
+                                        .filter((b) => b.group === g)
+                                        .map((b) => (
+                                            <OverlayTrigger
+                                                key={`triger-${b.bubbleId}`}
+                                                placement="top"
+                                                overlay={
+                                                    <Popover id={`tooltip-${b.bubbleId}`}>
+                                                        <Popover.Header>{b.bubble?.name}</Popover.Header>
+                                                        <Popover.Body>{b.bubble?.effect}</Popover.Body>
+                                                    </Popover>
+                                                }
+                                            >
+                                                <BubbleItem isDragging={false}>
+                                                    <Figure.Image
+                                                        width={56}
+                                                        height={56}
+                                                        src={`./assets/alchemy/${b.bubble?.category}${b.bubble?.bubbleNumber}.png`}
+                                                        alt={b.bubble?.name}
+                                                    />
+                                                    <p>{b.points}</p>
+                                                </BubbleItem>
+                                            </OverlayTrigger>
+                                        ))}
+                                </BuildBubbleContainer>
+                            ))
+                        ) : (
+                            <div>No bubbles were added in this build</div>
+                        )}
                     </Row>
                 </>
             )}

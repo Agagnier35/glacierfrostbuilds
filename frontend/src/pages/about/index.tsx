@@ -55,15 +55,17 @@ const About = () => {
                         <p style={{ textDecoration: 'line-through' }}>Create Builds</p>
                         <p style={{ textDecoration: 'line-through' }}>Discord SSO login</p>
                         <p style={{ textDecoration: 'line-through' }}>View 1 Build</p>
+                        <p style={{ textDecoration: 'line-through' }}>Edit 1 Build</p>
                         <p style={{ textDecoration: 'line-through' }}>
                             View Builds using search function (class, tags, sort upvoted, new, etc...)
                         </p>
                         <p style={{ textDecoration: 'line-through' }}>Upvotes/downvotes Builds</p>
+                        <p style={{ textDecoration: 'line-through' }}>Remove login requirements</p>
                     </Row>
                     <Row>
                         <h5>Should Do Eventually: </h5>
-                        <p>Bubbles/Vials Priority Builds</p>
-                        <p>Card Builds</p>
+                        <p style={{ textDecoration: 'line-through' }}>Bubbles Priority Builds</p>
+                        <p style={{ textDecoration: 'line-through' }}>Card Builds</p>
                         <p>Constellation Builds</p>
                         <p>Stamps priority Builds</p>
                     </Row>
@@ -71,6 +73,7 @@ const About = () => {
                         <h5>Ideas / If community is interested</h5>
                         <p>Other SSO types(github, google, etc..)</p>
                         <p>Statue priority Builds</p>
+                        <p>Vials priority Builds</p>
                     </Row>
                 </Card.Body>
             </Card>
@@ -79,8 +82,18 @@ const About = () => {
                 <Card.Body>
                     <Container fluid>
                         <Row>
+                            <h3>v0.2.0</h3>
+                            <p>Remove login Requirement for creating builds</p>
+                            <p>Remove login Requirement for upvote-downvote</p>
+                            <p>Edit a build if you are the creator</p>
+                            <p>one-click build deprecation/Version bump (if you are the creator)</p>
+                            <p>Adding cards to your build</p>
+                            <p>Adding Card Set to your build</p>
+                            <p>Alchemy bubbles priority/ recommended points amount</p>
+                        </Row>
+                        <Row>
                             <h3>v0.1.2</h3>
-                            <p>Add a more intersting homepage</p>
+                            <p>Add a more interesting homepage</p>
                         </Row>
                         <Row>
                             <h3>v0.1.1</h3>
