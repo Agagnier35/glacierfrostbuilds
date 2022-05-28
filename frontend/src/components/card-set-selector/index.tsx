@@ -47,6 +47,7 @@ const CardSetSelector = () => {
                             height="72"
                             style={{ objectFit: 'contain', margin: 0 }}
                         />
+                        <p>{c.cardCategory}</p>
                     </Col>
                 ))}
             </Row>

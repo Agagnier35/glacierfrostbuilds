@@ -33,6 +33,7 @@ const ClassSelector = () => {
                             src={`./assets/classes/${c}.png`}
                             style={{ maxWidth: '90px', maxHeight: '90px', objectFit: 'contain' }}
                         />
+                        <p>{c}</p>
                     </Col>
                 ))}
             </Row>

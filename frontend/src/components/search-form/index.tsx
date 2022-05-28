@@ -59,35 +59,34 @@ const SearchForm = ({ searchForm, setSearchForm, search }: SearchFormProps) => {
                     />
                 </Col>
             </Row>
-            <Row className="mb-3">
-                <h5>Class:</h5>
-                <ButtonGroup className="flex-wrap">
-                    {classes.map((c) => {
-                        const isActive = searchForm.className === c;
-                        return (
-                            <Button
-                                key={c}
-                                size="sm"
-                                variant={`${isActive ? 'secondary' : 'outline-primary'}`}
-                                onClick={() =>
-                                    setSearchForm({
-                                        ...searchForm,
-                                        className: isActive ? '' : c,
-                                    })
-                                }
-                            >
-                                <Figure.Image
-                                    src={`./assets/classes/${c}.png`}
-                                    style={{
-                                        maxWidth: '90px',
-                                        maxHeight: '90px',
-                                        objectFit: 'contain',
-                                    }}
-                                />
-                            </Button>
-                        );
-                    })}
-                </ButtonGroup>
+            <h5>Class:</h5>
+            <Row className="mb-3" md={6} sm={3} xs={3}>
+                {classes.map((c) => {
+                    const isActive = searchForm.className === c;
+                    return (
+                        <Button
+                            key={c}
+                            size="sm"
+                            variant={`${isActive ? 'secondary' : 'outline-primary'}`}
+                            onClick={() =>
+                                setSearchForm({
+                                    ...searchForm,
+                                    className: isActive ? '' : c,
+                                })
+                            }
+                        >
+                            <Figure.Image
+                                src={`./assets/classes/${c}.png`}
+                                style={{
+                                    maxWidth: '90px',
+                                    maxHeight: '90px',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                            <p>{c}</p>
+                        </Button>
+                    );
+                })}
             </Row>
             <Row className="mb-3">
                 <h5>Tags:</h5>

@@ -43,6 +43,7 @@ export const BubbleItem = styled.div<{ isDragging: boolean }>`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
 
     img {
         margin-bottom: 0;

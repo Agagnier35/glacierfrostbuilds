@@ -191,12 +191,22 @@ const BubbleEditor = () => {
                                                                 </Popover>
                                                             }
                                                         >
-                                                            <Figure.Image
-                                                                width={56}
-                                                                height={56}
-                                                                src={`./assets/alchemy/${b.category}${b.bubbleNumber}.png`}
-                                                                alt={b.name}
-                                                            />
+                                                            <div
+                                                                style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'end',
+                                                                    justifyContent: 'start',
+                                                                    width: '100%',
+                                                                }}
+                                                            >
+                                                                <Figure.Image
+                                                                    width={56}
+                                                                    height={56}
+                                                                    src={`./assets/alchemy/${b.category}${b.bubbleNumber}.png`}
+                                                                    alt={b.name}
+                                                                />
+                                                                <p>{b.name}</p>
+                                                            </div>
                                                         </OverlayTrigger>
                                                     </BubbleItem>
                                                 )}

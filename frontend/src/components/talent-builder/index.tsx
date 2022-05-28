@@ -38,7 +38,7 @@ const TalentBuilder = () => {
 
         return (
             <Container fluid>
-                <Row lg={3} xs={1}>
+                <Row lg={4} xs={1}>
                     {talentCards}
                 </Row>
             </Container>

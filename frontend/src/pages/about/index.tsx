@@ -82,6 +82,14 @@ const About = () => {
                 <Card.Body>
                     <Container fluid>
                         <Row>
+                            <h3>0.3.0</h3>
+                            <p>Added Elite Classes and W4 cards and bubble</p>
+                            <p>
+                                &nbsp; Didn't update old content and talents, probably not 100% up to date with current
+                                game
+                            </p>
+                        </Row>
+                        <Row>
                             <h3>v0.2.0</h3>
                             <p>Remove login Requirement for creating builds</p>
                             <p>Remove login Requirement for upvote-downvote</p>
